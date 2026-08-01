@@ -159,7 +159,7 @@ export default function TemoignagesPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 bg-[#D4A843]/10 rounded-lg px-3 py-2">
-                      <ButtonIcon className="h-4 w-4 text-[#D4A843] shrink-0" />
+                      <Star className="h-4 w-4 text-[#D4A843] shrink-0" />
                       <p className="text-xs font-medium text-[#1B3A5C] dark:text-white/70">{review.course.title}</p>
                     </div>
                   </div>
