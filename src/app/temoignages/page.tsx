@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
-import { Star, Quote, Button as ButtonIcon, Loader2, MessageSquareOff } from "lucide-react"
+import { Star, Quote, Loader2, MessageSquareOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Header from "@/components/sections/Header"
