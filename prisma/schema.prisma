@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String?
+  telephone     String?
+  /// Niveau de l'utilisateur. Valeurs valides : A1, A2, B1, B2, C1, C2
+  niveau        String   @default("A1")
+  /// Rôle de l'utilisateur. Valeurs valides : student, admin
+  role          String   @default("student")
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  enrollments  Enrollment[]
+  chatMessages ChatMessage[]
+  passwordResetTokens PasswordResetToken[]
+  reviews       Review[]
+  notifications Notification[]
+  payments      Payment[]
+  articles      Article[]
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  /// Niveau du cours. Valeurs valides : A1, A2, B1, B2, C1, C2
+  level       String
+  lessons     Int
+  duration    String
+  /// Display price (e.g. '150 000 FCFA')
+  price       String
+  badge       String?
+  badgeColor  String?
+  image       String
+  description String
+  objectives  String
+  prerequisites String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  enrollments Enrollment[]
+  reviews     Review[]
+  payments    Payment[]
+  liveSessions LiveSession[]
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  progress  Int      @default(0)
+  /// Statut de l'inscription. Valeurs valides : active, completed, cancelled
+  status    String   @default("active")
+  startedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  nom       String
+  prenom    String
+  email     String
+  telephone String
+  niveau    String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  /// Rôle du message. Valeurs valides : user, assistant
+  role      String
+  content   String
+  correction String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  /// Type de notification. Valeurs valides : info, success, warning, error
+  type      String   @default("info")
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  /// Display amount (e.g. '150 000 FCFA')
+  amount    String
+  /// Statut du paiement. Valeurs valides : pending, completed, failed, refunded
+  status    String   @default("completed")
+  /// Méthode de paiement. Valeurs valides : carte, mobile_money, virement, espece
+  method    String   @default("carte")
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model LiveSession {
+  id              String   @id @default(cuid())
+  courseId        String
+  title           String
+  description     String?
+  startAt         DateTime
+  durationMinutes Int      @default(60)
+  roomName        String   @unique
+  createdAt       DateTime @default(now())
+
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  published   Boolean  @default(true)
+  authorId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  author      User     @relation(fields: [authorId], references: [id])
+}
