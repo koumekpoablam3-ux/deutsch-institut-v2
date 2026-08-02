@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
-import { Star, Quote, GraduationCap, Loader2, MessageSquareOff } from "lucide-react"
+import { Star, Quote, BookOpen, Loader2, MessageSquareOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Header from "@/components/sections/Header"
@@ -159,7 +159,7 @@ export default function TemoignagesPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 bg-[#D4A843]/10 rounded-lg px-3 py-2">
-                      <GraduationCap className="h-4 w-4 text-[#D4A843] shrink-0" />
+                      <BookOpen className="h-4 w-4 text-[#D4A843] shrink-0" />
                       <p className="text-xs font-medium text-[#1B3A5C] dark:text-white/70">{review.course.title}</p>
                     </div>
                   </div>
