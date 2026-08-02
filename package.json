@@ -26,6 +26,7 @@
     "next": "16.2.12",
     "next-auth": "beta",
     "next-themes": "^0.4.6",
+    "pdf-lib": "^1.17.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "shadcn": "^4.16.0",

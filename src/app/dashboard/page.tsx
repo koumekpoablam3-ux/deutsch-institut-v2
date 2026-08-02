@@ -198,7 +198,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2"><div className="flex-1 h-2 bg-[#f8f9fb] dark:bg-[#0a1628] rounded-full"><div className="h-full rounded-full bg-[#D4A843] transition-all" style={{ width: enr.progress + "%" }} /></div><span className="text-xs font-bold text-[#D4A843]">{enr.progress}%</span></div>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
-                    <a href={"/cours/" + enr.course.slug}><Button className={"w-full text-xs font-semibold h-9 " + (enr.progress >= 100 ? "border border-[#1B3A5C]/20 text-[#1B3A5C]/60 dark:text-white/60 dark:border-white/20" : "bg-[#D4A843] text-white")}>{enr.progress >= 100 ? "Revoir" : "Continuer"}</Button></a>
+                    <a href={"/cours/" + enr.course.slug + "/apprendre"}><Button className={"w-full text-xs font-semibold h-9 " + (enr.progress >= 100 ? "border border-[#1B3A5C]/20 text-[#1B3A5C]/60 dark:text-white/60 dark:border-white/20" : "bg-[#D4A843] text-white")}>{enr.progress >= 100 ? "Revoir" : "Continuer"}</Button></a>
                     {enr.progress >= 100 && (
                       <a href={"/dashboard/certificat/" + enr.id}><Button variant="outline" className="w-full text-xs font-semibold h-9 border-[#D4A843] text-[#D4A843]">Certificat</Button></a>
                     )}

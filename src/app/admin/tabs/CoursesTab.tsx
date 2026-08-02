@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
-import { Loader2, Plus, Pencil, Trash2, X } from "lucide-react"
+import { Loader2, Plus, Pencil, Trash2, X, BookOpen } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -133,6 +134,7 @@ export default function CoursesTab() {
                     <td className="p-4 text-[#1B3A5C]/70 dark:text-white/60">{c._count?.enrollments ?? 0}</td>
                     <td className="p-4">
                       <div className="flex justify-end gap-2">
+                        <Link href={`/admin/cours/${c.id}`} className="p-2 rounded-lg hover:bg-[#1B3A5C]/5 dark:hover:bg-white/5 text-[#1B3A5C] dark:text-white/70" title="Gérer le contenu (modules, quiz)"><BookOpen className="h-4 w-4" /></Link>
                         <button onClick={() => openEdit(c)} className="p-2 rounded-lg hover:bg-[#1B3A5C]/5 dark:hover:bg-white/5 text-[#1B3A5C] dark:text-white/70"><Pencil className="h-4 w-4" /></button>
                         <button onClick={() => handleDelete(c)} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500"><Trash2 className="h-4 w-4" /></button>
                       </div>

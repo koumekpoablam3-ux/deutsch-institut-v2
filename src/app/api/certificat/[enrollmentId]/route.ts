@@ -23,7 +23,20 @@ export async function GET(
       return NextResponse.json({ success: false, error: "Certificat introuvable" }, { status: 404 });
     }
 
-    if (enrollment.status !== "completed" && enrollment.progress < 100) {
+    const quizQuestionCount = await db.quizQuestion.count({ where: { courseId: enrollment.courseId } });
+
+    if (quizQuestionCount > 0) {
+      // Un quiz existe pour ce cours : le certificat n'est délivré qu'après l'avoir réussi
+      const certificate = await db.certificate.findUnique({
+        where: { userId_courseId: { userId, courseId: enrollment.courseId } },
+      });
+      if (!certificate) {
+        return NextResponse.json(
+          { success: false, error: "Réponds d'abord correctement au quiz du cours pour obtenir ton certificat." },
+          { status: 403 }
+        );
+      }
+    } else if (enrollment.status !== "completed" && enrollment.progress < 100) {
       return NextResponse.json(
         { success: false, error: "Ce cours n'est pas encore terminé. Le certificat sera disponible à 100% de progression." },
         { status: 403 }

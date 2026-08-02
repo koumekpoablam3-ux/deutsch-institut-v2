@@ -36,7 +36,7 @@ export default function CourseEnrollButton({ courseId, slug, price }: { courseId
     <div>
       <p className="text-3xl font-extrabold text-[#1B3A5C] dark:text-[#D4A843] mb-4">{price}</p>
       {status === "enrolled" ? (
-        <Button onClick={() => router.push("/dashboard")} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-base">
+        <Button onClick={() => router.push(`/cours/${slug}/apprendre`)} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-base">
           Accéder au cours →
         </Button>
       ) : status === "not_logged_in" ? (

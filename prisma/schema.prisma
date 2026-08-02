@@ -29,6 +29,9 @@ model User {
   notifications Notification[]
   payments      Payment[]
   articles      Article[]
+  moduleProgress ModuleProgress[]
+  quizAttempts  QuizAttempt[]
+  certificates  Certificate[]
 }
 
 model PasswordResetToken {
@@ -64,6 +67,89 @@ model Course {
   reviews     Review[]
   payments    Payment[]
   liveSessions LiveSession[]
+  modules     CourseModule[]
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+  certificates Certificate[]
+}
+
+model CourseModule {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  /// Type de module. Valeurs valides : pdf, video, text, link
+  type        String   @default("text")
+  /// Contenu texte, ou URL pour type video/link
+  content     String?
+  fileName    String?
+  /// Fichier encodé en base64 (PDF importé par l'admin)
+  fileData    String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress    ModuleProgress[]
+
+  @@index([courseId])
+}
+
+model ModuleProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  moduleId    String
+  completedAt DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, moduleId])
+  @@index([userId])
+  @@index([moduleId])
+}
+
+model QuizQuestion {
+  id            String   @id @default(cuid())
+  courseId      String
+  question      String
+  /// Liste des choix de réponse, encodée en JSON (ex: ["Option A","Option B"])
+  options       String
+  correctIndex  Int
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
+
+model QuizAttempt {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  score      Int
+  total      Int
+  passed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([courseId])
+}
+
+model Certificate {
+  id                  String   @id @default(cuid())
+  userId              String
+  courseId            String
+  certificateNumber   String   @unique
+  issuedAt            DateTime @default(now())
+
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course              Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
 }
 
 model Enrollment {
