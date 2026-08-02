@@ -5,6 +5,7 @@ import type { NextAuthConfig } from "next-auth";
 // Le provider Credentials (qui a besoin de Prisma + bcrypt) est ajouté séparément
 // dans auth.ts, uniquement pour le runtime Node.js (routes API).
 export const authConfig: NextAuthConfig = {
+  trustHost: true,
   providers: [],
   session: {
     strategy: "jwt",
