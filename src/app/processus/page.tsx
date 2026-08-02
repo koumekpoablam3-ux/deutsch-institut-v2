@@ -151,7 +151,7 @@ export default function ProcessusPage() {
           <p className="text-white/60 mb-8">Inscrivez-vous maintenant et commencez votre formation en allemand.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/contact"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">S'inscrire maintenant</Button></Link>
-            <Link href="/cours"><Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-8">Voir les cours</Button></Link>
+            <Link href="/cours"><Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8">Voir les cours</Button></Link>
           </div>
         </div>
       </section>

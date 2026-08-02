@@ -161,7 +161,7 @@ export default function CoursPage() {
           <p className="text-white/60 mb-8">Passez notre test de niveau gratuit et obtenez une recommandation personnalisée.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/test-de-niveau"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">Passer le test de niveau</Button></Link>
-            <Link href="/contact"><Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-8">Nous contacter</Button></Link>
+            <Link href="/contact"><Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8">Nous contacter</Button></Link>
           </div>
         </div>
       </section>

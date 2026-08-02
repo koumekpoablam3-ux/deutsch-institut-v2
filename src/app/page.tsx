@@ -184,7 +184,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-8 h-13 text-base">
+                <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 h-13 text-base">
                   Prendre rendez-vous
                 </Button>
               </Link>
@@ -353,7 +353,7 @@ export default function Home() {
             <p className="text-white/60 mb-8 text-lg">Rejoignez plus de 500 étudiants. Essai gratuit de 7 jours, sans engagement.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/contact"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8 h-13 text-base">S'inscrire maintenant</Button></Link>
-              <Link href="/processus"><Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 px-8 h-13 text-base">Découvrir le processus</Button></Link>
+              <Link href="/processus"><Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 h-13 text-base">Découvrir le processus</Button></Link>
             </div>
           </motion.div>
         </div>
