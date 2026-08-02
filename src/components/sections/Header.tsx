@@ -7,7 +7,6 @@ import Link from "next/link"
 import { Menu, X, Sun, Moon, GraduationCap, User, LogOut } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useSession, signOut } from "next-auth/react"
-import { Button } from "@/components/ui/button"
 import NotificationBell from "@/components/NotificationBell"
 
 const emptySub = () => () => {}
@@ -82,13 +81,6 @@ export default function Header() {
               </>
             ) : (
               <Link href="/login" className="hidden md:block text-sm font-medium text-[#1B3A5C]/70 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white">Se connecter</Link>
-            )}
-            {status !== "authenticated" && (
-              <Link href="/contact">
-                <Button className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold h-9 text-sm px-5">
-                  Inscription
-                </Button>
-              </Link>
             )}
             <button className="lg:hidden text-[#1B3A5C] dark:text-white" onClick={() => setOpen(!open)}>
               {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
