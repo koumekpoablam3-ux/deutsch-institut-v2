@@ -18,8 +18,6 @@ interface HeroSlide {
   // Slide 1 : pays où se trouvent les centres + modes de cours
   modes?: string[]
   countries?: string[]
-  // Slide 2 : offre de voyage
-  offer?: { price: string; detail: string }
   // Slide 3 : partenaire en Allemagne (logo + texte)
   partner?: { name: string; logo: string; text: string }
 }
@@ -41,7 +39,6 @@ const heroSlides: HeroSlide[] = [
     title: "Voyagez pour seulement",
     highlight: "850 000 FCFA",
     subtitle: "Puis payez 100 € par mois pendant 33 mois, une fois arrivé en Allemagne.",
-    offer: { price: "850 000 FCFA", detail: "100 € / mois pendant 33 mois une fois en Allemagne" },
   },
   {
     image: "/images/hero/hero-3.jpg",
@@ -129,9 +126,9 @@ export default function Home() {
   const slide = heroSlides[currentSlide]
 
   const slideVariants = {
-    enter: (d: number) => ({ x: d > 0 ? 300 : -300, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -300 : 300, opacity: 0 }),
+    enter: () => ({ opacity: 0 }),
+    center: { opacity: 1 },
+    exit: () => ({ opacity: 0 }),
   }
 
   return (
@@ -139,9 +136,9 @@ export default function Home() {
       <Header />
 
       {/* HERO CAROUSEL */}
-      <section className="relative h-screen min-h-[600px] max-h-[900px] overflow-hidden">
+      <section className="relative h-screen min-h-[680px] max-h-[900px] overflow-hidden">
         {/* Background Images */}
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+        <AnimatePresence initial={false} custom={direction} mode="sync">
           <motion.div
             key={currentSlide}
             custom={direction}
@@ -169,7 +166,7 @@ export default function Home() {
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-          <div className="max-w-2xl py-20">
+          <div className="max-w-3xl pt-28 pb-16">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentSlide}
@@ -188,13 +185,13 @@ export default function Home() {
                   Inscriptions ouvertes - Session 2025
                 </motion.div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-5">
                   {slide.title}<br />
                   <span className="text-[#D4A843]">{slide.highlight}</span>
                 </h1>
 
                 {slide.subtitle && (
-                  <p className="text-lg text-white/70 mb-6 max-w-lg leading-relaxed">
+                  <p className="text-base sm:text-lg text-white/70 mb-6 max-w-xl leading-relaxed">
                     {slide.subtitle}
                   </p>
                 )}
@@ -222,13 +219,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {slide.offer && (
-                  <div className="inline-block bg-white/10 backdrop-blur-sm border border-[#D4A843]/40 rounded-2xl px-6 py-4 mb-6">
-                    <p className="text-3xl sm:text-4xl font-extrabold text-[#D4A843]">{slide.offer.price}</p>
-                    <p className="text-white/80 text-sm mt-1">{slide.offer.detail}</p>
-                  </div>
-                )}
-
                 {slide.partner && (
                   <div className="flex flex-col sm:flex-row sm:items-center gap-5 bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-5 mb-6 max-w-xl">
                     <div className="relative shrink-0 w-40 h-16 bg-white rounded-xl overflow-hidden">
@@ -250,7 +240,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-4 mb-12"
+              className="flex flex-wrap gap-4 mb-8"
             >
               <Link href="/cours">
                 <Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8 h-13 text-base">
