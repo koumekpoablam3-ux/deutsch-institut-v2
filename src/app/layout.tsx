@@ -15,10 +15,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     template: "%s | Deutsch Institut - Cours d'Allemand à Dakar",
-    default: "Deutsch Institut - Cours d'Allemand à Dakar | A1 à C1",
+    default: "Deutsch Institut - Cours d'Allemand à Dakar | A1 à B2",
   },
   description:
-    "Institut de formation en langue allemande à Dakar, Sénégal. Cours certifiés A1 à C1, préparation aux examens Goethe-Zertifikat, accompagnement visa et hébergement. 500+ étudiants formés, 98% de réussite.",
+    "Institut de formation en langue allemande à Dakar, Sénégal. Cours certifiés A1 à B2, préparation aux examens Goethe-Zertifikat, accompagnement visa et hébergement. 500+ étudiants formés, 98% de réussite.",
   keywords: [
     "cours allemand dakar",
     "apprendre allemand sénégal",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "formation allemande",
     "préparation examen goethe",
     "visa allemagne sénégal",
-    "allemand A1 A2 B1 B2 C1",
+    "allemand A1 A2 B1 B2",
     "cours de langue dakar",
   ],
   authors: [{ name: "Deutsch-Institut" }],
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: "Deutsch Institut - Cours d'Allemand à Dakar",
-    title: "Deutsch Institut - Cours d'Allemand à Dakar | A1 à C1",
+    title: "Deutsch Institut - Cours d'Allemand à Dakar | A1 à B2",
     description:
-      "Formation intensive certifiée en allemand, niveaux A1 à C1. Préparation Goethe, accompagnement visa. Dakar, Sénégal.",
+      "Formation intensive certifiée en allemand, niveaux A1 à B2. Préparation Goethe, accompagnement visa. Dakar, Sénégal.",
   },
   robots: {
     index: true,

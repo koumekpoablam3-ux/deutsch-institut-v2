@@ -57,7 +57,7 @@ const questions: Question[] = [
     correct: 1,
   },
   {
-    id: 7, category: "grammaire", level: "C1",
+    id: 7, category: "grammaire", level: "B2",
     question: "Quelle phrase utilise correctement le subjonctif II ?",
     options: [
       "Wenn ich reich bin, kaufe ich ein Haus.",
@@ -102,8 +102,7 @@ function getResult(score: number) {
   if (score <= 3) return { level: "A1", label: "Débutant", description: "Vous êtes au début de votre parcours en allemand. Nos cours A1 sont faits pour vous !", color: "from-[#16a34a] to-[#4ade80]" }
   if (score <= 5) return { level: "A2", label: "Élémentaire", description: "Vous avez les bases. Le niveau A2 vous permettra de consolider vos acquis.", color: "from-[#D4A843] to-[#E8C76A]" }
   if (score <= 7) return { level: "B1", label: "Intermédiaire", description: "Bon niveau ! Le B1 vous ouvrira de nouvelles perspectives professionnelles.", color: "from-[#1B3A5C] to-[#3b82f6]" }
-  if (score <= 9) return { level: "B2", label: "Intermédiaire supérieur", description: "Excellent ! Vous maîtrisez bien l'allemand. Passez au B2 pour vous perfectionner.", color: "from-[#7c3aed] to-[#a78bfa]" }
-  return { level: "C1", label: "Avancé", description: "Impressionnant ! Vous avez un niveau avancé. Le C1 est le chemin vers l'excellence.", color: "from-[#dc2626] to-[#f87171]" }
+  return { level: "B2", label: "Intermédiaire supérieur", description: "Excellent ! Vous maîtrisez bien l'allemand. Le niveau B2 vous permettra de vous perfectionner et de préparer vos examens.", color: "from-[#7c3aed] to-[#a78bfa]" }
 }
 
 export default function TestDeNiveauPage() {

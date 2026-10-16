@@ -7,7 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "sonner"
-import { DEFAULT_CTA, DEFAULT_STATS, type CtaSettings, type StatsSettings } from "@/lib/site-content"
+import ImagePicker from "../components/ImagePicker"
+import {
+  DEFAULT_CTA, DEFAULT_FEATURES, DEFAULT_STATS, DEFAULT_TESTIMONIALS, FEATURE_ICONS, FEATURE_ICON_LABELS,
+  type CtaSettings, type FeaturesSettings, type StatsSettings, type TestimonialsSettings,
+} from "@/lib/site-content"
+
+type SaveKey = "stats" | "cta" | "features" | "testimonials"
+const selectCls = "w-full h-10 rounded-lg border border-input bg-transparent px-3 text-sm text-[#1B3A5C] dark:text-white"
 
 const labelCls = "mb-1.5 block text-[#1B3A5C] dark:text-white/80"
 const card = "bg-white dark:bg-[#132d4a] rounded-xl p-5 shadow-sm"
@@ -15,14 +22,16 @@ const card = "bg-white dark:bg-[#132d4a] rounded-xl p-5 shadow-sm"
 export default function SiteContentTab() {
   const [stats, setStats] = useState<StatsSettings>(DEFAULT_STATS)
   const [cta, setCta] = useState<CtaSettings>(DEFAULT_CTA)
+  const [features, setFeatures] = useState<FeaturesSettings>(DEFAULT_FEATURES)
+  const [testimonials, setTestimonials] = useState<TestimonialsSettings>(DEFAULT_TESTIMONIALS)
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState<"stats" | "cta" | null>(null)
+  const [saving, setSaving] = useState<SaveKey | null>(null)
 
   const fetchSettings = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/settings")
       const data = await res.json()
-      if (res.ok) { setStats(data.stats); setCta(data.cta) }
+      if (res.ok) { setStats(data.stats); setCta(data.cta); setFeatures(data.features); setTestimonials(data.testimonials) }
       else toast.error(data.error || "Erreur lors du chargement")
     } catch { toast.error("Erreur de connexion") }
     finally { setLoading(false) }
@@ -30,7 +39,7 @@ export default function SiteContentTab() {
 
   useEffect(() => { fetchSettings() }, [fetchSettings])
 
-  const save = async (key: "stats" | "cta", value: StatsSettings | CtaSettings) => {
+  const save = async (key: SaveKey, value: StatsSettings | CtaSettings | FeaturesSettings | TestimonialsSettings) => {
     setSaving(key)
     try {
       const res = await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key, value }) })
@@ -43,6 +52,11 @@ export default function SiteContentTab() {
 
   const updateItem = (i: number, patch: Partial<{ value: string; label: string }>) =>
     setStats((s) => ({ ...s, items: s.items.map((it, idx) => (idx === i ? { ...it, ...patch } : it)) }))
+
+  const updateFeature = (i: number, patch: Partial<FeaturesSettings["items"][number]>) =>
+    setFeatures((f) => ({ ...f, items: f.items.map((it, idx) => (idx === i ? { ...it, ...patch } : it)) }))
+  const updateTestimonial = (i: number, patch: Partial<TestimonialsSettings["items"][number]>) =>
+    setTestimonials((t) => ({ ...t, items: t.items.map((it, idx) => (idx === i ? { ...it, ...patch } : it)) }))
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="h-8 w-8 text-[#D4A843] animate-spin" /></div>
 
@@ -84,6 +98,61 @@ export default function SiteContentTab() {
         </div>
         <div className="flex justify-end mt-4">
           <Button onClick={() => save("cta", cta)} disabled={saving === "cta"} className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold text-sm">{saving === "cta" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}</Button>
+        </div>
+      </div>
+
+      {/* Section « Pourquoi nous choisir » */}
+      <div className={card}>
+        <h2 className="font-bold text-[#1B3A5C] dark:text-white mb-4">Section « Pourquoi nous choisir »</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div><Label className={labelCls}>Petit titre</Label><Input maxLength={60} value={features.eyebrow} onChange={(e) => setFeatures({ ...features, eyebrow: e.target.value })} /></div>
+          <div><Label className={labelCls}>Titre</Label><Input maxLength={120} value={features.title} onChange={(e) => setFeatures({ ...features, title: e.target.value })} /></div>
+        </div>
+        <div className="mt-4"><Label className={labelCls}>Texte d&apos;introduction</Label><Textarea rows={2} maxLength={300} value={features.subtitle} onChange={(e) => setFeatures({ ...features, subtitle: e.target.value })} /></div>
+        <div className="space-y-4 mt-5">
+          {features.items.map((it, i) => (
+            <div key={i} className="rounded-xl border border-[#1B3A5C]/10 dark:border-white/10 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#1B3A5C] dark:text-white">Carte {i + 1}</p>
+                <button onClick={() => setFeatures((f) => ({ ...f, items: f.items.filter((_, idx) => idx !== i) }))} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500" aria-label="Supprimer la carte"><Trash2 className="h-4 w-4" /></button>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div className="sm:col-span-2"><Label className={labelCls}>Titre</Label><Input maxLength={80} value={it.title} onChange={(e) => updateFeature(i, { title: e.target.value })} /></div>
+                <div><Label className={labelCls}>Icône</Label><select className={selectCls} value={it.icon} onChange={(e) => updateFeature(i, { icon: e.target.value as typeof it.icon })}>{FEATURE_ICONS.map((ic) => <option key={ic} value={ic}>{FEATURE_ICON_LABELS[ic]}</option>)}</select></div>
+              </div>
+              <div><Label className={labelCls}>Description</Label><Textarea rows={3} maxLength={500} value={it.description} onChange={(e) => updateFeature(i, { description: e.target.value })} /></div>
+              <ImagePicker label="Image" value={it.image} onChange={(v) => updateFeature(i, { image: v })} />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-4">
+          <Button type="button" variant="outline" size="sm" disabled={features.items.length >= 8} onClick={() => setFeatures((f) => ({ ...f, items: [...f.items, { icon: "star", title: "", description: "", image: "/images/features/certification.jpg" }] }))}><Plus className="h-4 w-4 mr-1.5" />Ajouter une carte</Button>
+          <Button onClick={() => save("features", features)} disabled={saving === "features"} className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold text-sm">{saving === "features" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}</Button>
+        </div>
+      </div>
+
+      {/* Témoignages de l'accueil */}
+      <div className={card}>
+        <h2 className="font-bold text-[#1B3A5C] dark:text-white mb-4">Témoignages de la page d&apos;accueil</h2>
+        <div className="space-y-4">
+          {testimonials.items.map((it, i) => (
+            <div key={i} className="rounded-xl border border-[#1B3A5C]/10 dark:border-white/10 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#1B3A5C] dark:text-white">Témoignage {i + 1}</p>
+                <button onClick={() => setTestimonials((t) => ({ ...t, items: t.items.filter((_, idx) => idx !== i) }))} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500" aria-label="Supprimer"><Trash2 className="h-4 w-4" /></button>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <div><Label className={labelCls}>Nom</Label><Input maxLength={60} value={it.name} onChange={(e) => updateTestimonial(i, { name: e.target.value })} /></div>
+                <div><Label className={labelCls}>Niveau / statut</Label><Input maxLength={60} placeholder="Étudiant B1" value={it.level} onChange={(e) => updateTestimonial(i, { level: e.target.value })} /></div>
+                <div><Label className={labelCls}>Note</Label><select className={selectCls} value={it.stars} onChange={(e) => updateTestimonial(i, { stars: Number(e.target.value) })}>{[5, 4, 3, 2, 1].map((n) => <option key={n} value={n}>{n} étoile{n > 1 ? "s" : ""}</option>)}</select></div>
+              </div>
+              <div><Label className={labelCls}>Témoignage</Label><Textarea rows={3} maxLength={500} value={it.text} onChange={(e) => updateTestimonial(i, { text: e.target.value })} /></div>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-4">
+          <Button type="button" variant="outline" size="sm" disabled={testimonials.items.length >= 9} onClick={() => setTestimonials((t) => ({ ...t, items: [...t.items, { name: "", level: "", stars: 5, text: "" }] }))}><Plus className="h-4 w-4 mr-1.5" />Ajouter un témoignage</Button>
+          <Button onClick={() => save("testimonials", testimonials)} disabled={saving === "testimonials"} className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold text-sm">{saving === "testimonials" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Enregistrer"}</Button>
         </div>
       </div>
     </div>

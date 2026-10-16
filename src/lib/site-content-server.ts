@@ -38,11 +38,13 @@ export async function getActiveSlides(): Promise<HeroSlideData[]> {
 }
 
 export async function getHomeContent(): Promise<HomeContent> {
-  const [slides, hero, stats, cta] = await Promise.all([
+  const [slides, hero, stats, cta, features, testimonials] = await Promise.all([
     getActiveSlides(),
     getSetting("hero"),
     getSetting("stats"),
     getSetting("cta"),
+    getSetting("features"),
+    getSetting("testimonials"),
   ])
-  return { slides, hero, stats, cta }
+  return { slides, hero, stats, cta, features, testimonials }
 }

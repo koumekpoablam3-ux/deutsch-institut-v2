@@ -12,7 +12,7 @@ import Header from "@/components/sections/Header"
 import Footer from "@/components/sections/Footer"
 import { toast } from "sonner"
 
-const tabs = ["Tous", "A1", "A2", "B1", "B2", "C1"]
+const tabs = ["Tous", "A1", "A2", "B1", "B2"]
 
 interface Course {
   id: string
@@ -87,7 +87,7 @@ export default function CoursPage() {
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-3">Nos Cours</h1>
-              <p className="text-white/70 max-w-xl text-lg">Des cours structurés et certifiés pour chaque niveau, du débutant A1 jusqu&apos;avancé C1.</p>
+              <p className="text-white/70 max-w-xl text-lg">Des cours structurés et certifiés pour chaque niveau, du débutant A1 jusqu&apos;au niveau B2.</p>
             </motion.div>
           </div>
         </div>

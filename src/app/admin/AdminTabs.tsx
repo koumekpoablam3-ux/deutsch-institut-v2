@@ -1,9 +1,9 @@
 "use client"
 
 import { signOut } from "next-auth/react"
-import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, CreditCard, Star, Video, Newspaper, GalleryHorizontal, PenLine, ImageIcon } from "lucide-react"
+import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, CreditCard, Star, Video, Newspaper, GalleryHorizontal, PenLine, ImageIcon, Phone } from "lucide-react"
 
-export type AdminTab = "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "medias"
+export type AdminTab = "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "contact" | "medias"
 
 const tabs: { key: AdminTab; icon: typeof BookOpen; label: string }[] = [
   { key: "cours", icon: BookOpen, label: "Cours" },
@@ -15,6 +15,7 @@ const tabs: { key: AdminTab; icon: typeof BookOpen; label: string }[] = [
   { key: "blog", icon: Newspaper, label: "Blog" },
   { key: "carrousel", icon: GalleryHorizontal, label: "Carrousel d'accueil" },
   { key: "contenu", icon: PenLine, label: "Contenu du site" },
+  { key: "contact", icon: Phone, label: "Coordonnées & pied de page" },
   { key: "medias", icon: ImageIcon, label: "Médiathèque" },
 ]
 
@@ -28,6 +29,7 @@ const tabTitles: Record<AdminTab, string> = {
   blog: "Blog",
   carrousel: "Carrousel de la page d'accueil",
   contenu: "Contenu de la page d'accueil",
+  contact: "Coordonnées, WhatsApp et réseaux sociaux",
   medias: "Médiathèque",
 }
 

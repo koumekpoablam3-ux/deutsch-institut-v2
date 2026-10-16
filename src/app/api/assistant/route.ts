@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         data: {
-          reply: `Nous proposons ${count} cours d'allemand, du niveau débutant (A1) à avancé (C1), avec des parcours spécialisés (affaires, université, préparation aux examens). Consultez la page "Cours" pour tout voir, ou dites-moi votre niveau (A1 à C1) pour des suggestions précises.`,
+          reply: `Nous proposons ${count} cours d'allemand, du niveau débutant (A1) à intermédiaire supérieur (B2), avec des parcours spécialisés (affaires, université, préparation aux examens). Consultez la page "Cours" pour tout voir, ou dites-moi votre niveau (A1 à B2) pour des suggestions précises.`,
         },
       });
     }
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
       success: true,
       data: {
         reply:
-          "Je peux vous renseigner sur nos cours, nos tarifs, les niveaux (A1 à C1), l'inscription, les certificats ou nos sessions en direct. Pouvez-vous préciser votre question ? Sinon, n'hésitez pas à utiliser notre page \"Contact\".",
+          "Je peux vous renseigner sur nos cours, nos tarifs, les niveaux (A1 à B2), l'inscription, les certificats ou nos sessions en direct. Pouvez-vous préciser votre question ? Sinon, n'hésitez pas à utiliser notre page \"Contact\".",
       },
     });
   } catch (error) {

@@ -2,10 +2,7 @@
 
 import { useState } from "react"
 import { X } from "lucide-react"
-
-// Numéro de support WhatsApp (Togo, +228)
-const WHATSAPP_NUMBER = "22893839645"
-const WHATSAPP_DISPLAY = "+228 93 83 96 45"
+import { useContactSettings } from "@/lib/use-contact-settings"
 
 const QUICK_MESSAGES = [
   "Bonjour, j'ai une question.",
@@ -23,6 +20,8 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export default function WhatsAppWidget() {
+  // Numéro modifiable dans l'admin (Coordonnées)
+  const { whatsappNumber: WHATSAPP_NUMBER, whatsappDisplay: WHATSAPP_DISPLAY } = useContactSettings()
   const [open, setOpen] = useState(false)
 
   const openWhatsApp = (message: string) => {

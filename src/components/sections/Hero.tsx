@@ -41,7 +41,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-lg text-white/75 mb-8 max-w-lg leading-relaxed">
-              Formation intensive certifiee du niveau A1 a C1. Preparation aux examens Goethe,
+              Formation intensive certifiee du niveau A1 a B2. Preparation aux examens Goethe,
               accompagnement visa et integration en Allemagne.
             </p>
 

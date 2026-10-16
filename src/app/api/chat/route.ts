@@ -46,7 +46,9 @@ function generateGermanExercise(message: string, niveau: string): {
   }
 
   // Level-specific exercises
-  switch (niveau.toUpperCase()) {
+  // Les niveaux vont de A1 à B2 : un ancien profil C1/C2 est traité comme B2
+  const level = ["C1", "C2"].includes(niveau.toUpperCase()) ? "B2" : niveau.toUpperCase();
+  switch (level) {
     case "A1": {
       const vocabExercises = [
         {
@@ -257,75 +259,6 @@ Mettez à la voix passive :
         },
       ];
       const selected = complexExercises[Math.floor(Math.random() * complexExercises.length)];
-      return { reply: selected.exercise };
-    }
-
-    case "C1": {
-      const advancedExercises = [
-        {
-          topic: "Les subordonnées infinitives (Infinitivkonstruktionen)",
-          exercise: `L'infinitif avec zu en allemand :
-
-Structure : ... zu + infinitif
-• Ich hoffe, dich bald zu sehen.
-• Es ist wichtig, pünktlich zu sein.
-• Sie hat aufgehört, zu rauchen.
-
-Attention : um ... zu, ohne ... zu, statt ... zu, anstatt ... zu
-• Er geht nach Deutschland, um Deutsch zu lernen.
-• Sie verließ den Raum, ohne ein Wort zu sagen.
-
-Transformez :
-1. Ich möchte Deutsch lernen. → Ich habe vor ...
-2. Er a dit nichts. Er ist gegangen. → Er ist gegangen, ohne ...
-3. Es ist schwer, Fremdsprachen zu lernen. (Réécrivez avec "es")`,
-        },
-        {
-          topic: "Le style nominal (Nominalstil)",
-          exercise: `Le style nominal en allemand — préférer les noms aux verbes :
-
-Au lieu de : Weil er krank ist, kommt er nicht.
-Nominalstil : Wegen seiner Krankheit kommt er nicht.
-
-Au lieu de : Bevor er abreist, packt er.
-Nominalstil : Vor seiner Abreise packt er.
-
-Transformez en style nominal :
-1. Weil es regnet, bleiben wir zu Hause.
-2. Nachdem sie das Studium beendet hatte, fand sie einen Job.
-3. Während er in Berlin lebte, hat er viel gelernt.`,
-        },
-        {
-          topic: "Les connecteurs argumentatifs (Konnektoren)",
-          exercise: `Connecteurs pour structurer un argumentaire :
-
-Ajout : darüber hinaus, zudem, ferner, zudem
-Opposition : dennoch, jedoch, hingegen, wohingegen
-Conséquence : daher, folglich, infolgedessen, demzufolge
-Cause : angesichts, aufgrund, infolge, mangels
-
-Complétez :
-1. Die Kosten sind hoch. ___ entscheiden wir uns für eine Alternative.
-2. ___ der guten Noten wurde er ausgezeichnet.
-3. Die Qualität ist gut; ___ ist der Preis zu hoch.`,
-        },
-        {
-          topic: "Les verbes à préfixe inséparable",
-          exercise: `Verbes à préfixe inséparable (be-, emp-, ent-, er-, ge-, miss-, ver-, zer-) :
-
-Ces verbes ne sont jamais séparables et leur participe passé ne prend pas de « ge- ».
-• besuchen → besuchte → hat besucht
-• verstehen → verstand → hat verstanden
-• erzählen → erzählte → hat erzählt
-• zerstören → zerstörte → hat zerstört
-
-Conjuguez au parfait :
-1. Ich (verstehen) die Frage.
-2. Er (erzählen) eine Geschichte.
-3. Wir (besuchen) das Museum.`,
-        },
-      ];
-      const selected = advancedExercises[Math.floor(Math.random() * advancedExercises.length)];
       return { reply: selected.exercise };
     }
 

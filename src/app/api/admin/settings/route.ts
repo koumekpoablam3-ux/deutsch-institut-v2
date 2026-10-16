@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/require-admin";
 import { db } from "@/lib/db";
-import { settingSchemas } from "@/lib/site-content";
+import { settingSchemas, SETTING_KEYS } from "@/lib/site-content";
 import { getSetting } from "@/lib/site-content-server";
 
 export async function GET() {
@@ -10,15 +10,18 @@ export async function GET() {
   if (error) return error;
 
   try {
-    const [hero, stats, cta] = await Promise.all([getSetting("hero"), getSetting("stats"), getSetting("cta")]);
-    return NextResponse.json({ hero, stats, cta });
+    const [hero, stats, cta, features, testimonials, contact] = await Promise.all([
+      getSetting("hero"), getSetting("stats"), getSetting("cta"),
+      getSetting("features"), getSetting("testimonials"), getSetting("contact"),
+    ]);
+    return NextResponse.json({ hero, stats, cta, features, testimonials, contact });
   } catch (err) {
     console.error("Admin settings GET error:", err);
     return NextResponse.json({ error: "Une erreur est survenue" }, { status: 500 });
   }
 }
 
-const bodySchema = z.object({ key: z.enum(["hero", "stats", "cta"]), value: z.unknown() });
+const bodySchema = z.object({ key: z.enum(SETTING_KEYS), value: z.unknown() });
 
 export async function PUT(request: NextRequest) {
   const { error } = await requireAdmin();

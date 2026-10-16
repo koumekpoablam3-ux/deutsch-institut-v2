@@ -14,12 +14,6 @@ import { DEFAULT_BUTTONS, type HomeContent } from "@/lib/site-content"
 // Les images téléversées (/api/media/..) et les liens externes ne passent pas par l'optimiseur Next
 const isOptimizable = (src: string) => src.startsWith("/images/")
 
-const testimonials = [
-  { name: "Maria P.", level: "Étudiante B1", stars: 5, text: "Grâce à Deutsch-Institut, j'ai progressé plus en 3 mois qu'en un an d'apprentissage classique. Les cours sont bien structurés et les professeurs sont très disponibles." },
-  { name: "Ahmed B.", level: "Étudiant B1", stars: 5, text: "J'ai obtenu mon Goethe B1 du premier coup. La méthode pédagogique est vraiment efficace et l'accompagnement visa m'a permis de rejoindre l'Allemagne en 6 mois." },
-  { name: "Sofia L.", level: "Étudiante A2", stars: 5, text: "En tant que débutante, j'étais inquiète. Mais la plateforme est si bien faite que j'ai pris confiance dès les premières semaines. Je recommande vivement." },
-]
-
 interface FeaturedCourse {
   id: string
   title: string
@@ -35,7 +29,7 @@ interface FeaturedCourse {
 }
 
 export default function HomeClient({ content }: { content: HomeContent }) {
-  const { slides: heroSlides, hero, stats, cta } = content
+  const { slides: heroSlides, hero, stats, cta, features, testimonials } = content
   const [currentSlide, setCurrentSlide] = useState(0)
   const [direction, setDirection] = useState(0)
   const [courses, setCourses] = useState<FeaturedCourse[]>([])
@@ -270,7 +264,7 @@ export default function HomeClient({ content }: { content: HomeContent }) {
       )}
 
       {/* FEATURES */}
-      <Features />
+      <Features content={features} />
 
       {/* FEATURED COURSES */}
       <section className="py-20 bg-white dark:bg-[#0a1628]">
@@ -361,7 +355,7 @@ export default function HomeClient({ content }: { content: HomeContent }) {
             <p className="text-[#1B3A5C]/60 dark:text-white/50 max-w-xl mx-auto">Des centaines d'étudiants ont déjà confiance en notre méthode.</p>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((t, i) => (
+            {testimonials.items.map((t, i) => (
               <motion.div key={t.name} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} className="bg-white dark:bg-[#132d4a] rounded-2xl p-8 relative">
                 <Quote className="h-10 w-10 text-[#D4A843]/20 absolute top-6 right-6" />
                 <div className="flex gap-0.5 mb-5">{Array.from({ length: t.stars }).map((_, j) => <Star key={j} className="h-4 w-4 fill-[#D4A843] text-[#D4A843]" />)}</div>

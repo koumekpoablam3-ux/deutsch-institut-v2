@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select"
 import Header from "@/components/sections/Header"
 import Footer from "@/components/sections/Footer"
+import { useContactSettings } from "@/lib/use-contact-settings"
 import { toast } from "sonner"
 
 const NIVEAUX = [
@@ -26,15 +27,16 @@ const NIVEAUX = [
   { label: "Je ne sais pas", value: "autre" },
 ]
 
-const contactInfo = [
-  { icon: Phone, label: "Téléphone", value: "+221 77 123 45 67", sub: "Lun - Ven, 8h - 18h" },
-  { icon: Mail, label: "Email", value: "contact@deutsch-institut.com", sub: "Réponse sous 24h" },
-  { icon: MapPin, label: "Adresse", value: "Dakar, Sénégal", sub: "Plateau, Rue 10" },
-  { icon: Clock, label: "Horaires", value: "Lundi - Vendredi", sub: "8h00 - 18h00" },
-  { icon: MessageCircle, label: "WhatsApp", value: "+221 77 123 45 67", sub: "Disponible 24h/24" },
-]
-
 export default function ContactPage() {
+  // Coordonnées modifiables dans l'admin
+  const contact = useContactSettings()
+  const contactInfo = [
+    { icon: Phone, label: "Téléphone", value: contact.phone, sub: contact.phoneNote },
+    { icon: Mail, label: "Email", value: contact.email, sub: contact.emailNote },
+    { icon: MapPin, label: "Adresse", value: contact.city, sub: contact.addressDetail },
+    { icon: Clock, label: "Horaires", value: contact.hoursDays, sub: contact.hoursTime },
+    { icon: MessageCircle, label: "WhatsApp", value: contact.whatsappDisplay, sub: "" },
+  ].filter((i) => i.value)
   const [formData, setFormData] = useState({ nom: "", prenom: "", email: "", telephone: "", niveau: "", message: "" })
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -193,8 +195,8 @@ export default function ContactPage() {
             <div className="h-64 bg-[#1B3A5C]/5 dark:bg-[#1B3A5C]/20 flex items-center justify-center">
               <div className="text-center">
                 <MapPin className="h-10 w-10 text-[#D4A843] mx-auto mb-3" />
-                <p className="text-[#1B3A5C] dark:text-white font-semibold">Deutsch-Institut</p>
-                <p className="text-[#1B3A5C]/50 dark:text-white/40 text-sm">Plateau, Rue 10 - Dakar, Sénégal</p>
+                <p className="text-[#1B3A5C] dark:text-white font-semibold">{contact.siteName}</p>
+                <p className="text-[#1B3A5C]/50 dark:text-white/40 text-sm">{[contact.addressDetail, contact.city].filter(Boolean).join(" - ")}</p>
               </div>
             </div>
           </div>

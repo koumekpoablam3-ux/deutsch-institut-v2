@@ -14,6 +14,7 @@ import PaymentsTab from "./tabs/PaymentsTab"
 import CarouselTab from "./tabs/CarouselTab"
 import SiteContentTab from "./tabs/SiteContentTab"
 import MediaTab from "./tabs/MediaTab"
+import ContactTab from "./tabs/ContactTab"
 
 const tabComponents: Record<AdminTab, React.ComponentType> = {
   cours: CoursesTab,
@@ -25,10 +26,11 @@ const tabComponents: Record<AdminTab, React.ComponentType> = {
   blog: ArticlesTab,
   carrousel: CarouselTab,
   contenu: SiteContentTab,
+  contact: ContactTab,
   medias: MediaTab,
 }
 
-const validTabs: AdminTab[] = ["cours", "messages", "utilisateurs", "paiements", "avis", "sessions", "blog", "carrousel", "contenu", "medias"]
+const validTabs: AdminTab[] = ["cours", "messages", "utilisateurs", "paiements", "avis", "sessions", "blog", "carrousel", "contenu", "contact", "medias"]
 
 function AdminContent() {
   const searchParams = useSearchParams()

@@ -21,7 +21,6 @@ const LEVELS = [
   { label: "Élémentaire (A2)", value: "A2" },
   { label: "Intermédiaire (B1)", value: "B1" },
   { label: "Avancé (B2)", value: "B2" },
-  { label: "Confirmé (C1)", value: "C1" },
 ]
 
 interface Profile {

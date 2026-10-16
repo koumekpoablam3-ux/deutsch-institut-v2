@@ -34,10 +34,10 @@ interface Enrollment {
   course: Course;
 }
 
-const levelOrder = ["A1", "A2", "B1", "B2", "C1"]
-const levelNames: Record<string, string> = { A1: "Débutant", A2: "Élémentaire", B1: "Intermédiaire", B2: "Interm. Sup.", C1: "Avancé" }
+const levelOrder = ["A1", "A2", "B1", "B2"]
+const levelNames: Record<string, string> = { A1: "Débutant", A2: "Élémentaire", B1: "Intermédiaire", B2: "Interm. Sup." }
 
-const gradientColors: Record<string, string> = { A1: "from-[#16a34a] to-[#4ade80]", A2: "from-[#D4A843] to-[#E8C76A]", B1: "from-[#1B3A5C] to-[#3b82f6]", B2: "from-[#7c3aed] to-[#a78bfa]", C1: "from-[#dc2626] to-[#f87171]" }
+const gradientColors: Record<string, string> = { A1: "from-[#16a34a] to-[#4ade80]", A2: "from-[#D4A843] to-[#E8C76A]", B1: "from-[#1B3A5C] to-[#3b82f6]", B2: "from-[#7c3aed] to-[#a78bfa]" }
 
 export default function DashboardPage() {
   const router = useRouter()

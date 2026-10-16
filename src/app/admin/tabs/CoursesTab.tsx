@@ -169,7 +169,7 @@ export default function CoursesTab() {
                 <div>
                   <Label className="mb-1.5 block text-[#1B3A5C] dark:text-white/80">Niveau</Label>
                   <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })} className="w-full h-9 rounded-lg border border-input bg-transparent px-3 text-sm">
-                    {["A1", "A2", "B1", "B2", "C1"].map(l => <option key={l} value={l}>{l}</option>)}
+                    {["A1", "A2", "B1", "B2"].map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
                 </div>
                 <div>

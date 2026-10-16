@@ -81,7 +81,7 @@ async function main() {
       email: "admin@deutsch-institut.com",
       password: hashedPassword,
       telephone: "+33 1 23 45 67 89",
-      niveau: "C1",
+      niveau: "B2",
       role: "admin",
     },
   });
@@ -187,24 +187,6 @@ async function main() {
     }),
     prisma.course.create({
       data: {
-        title: "Allemand Avancé C1",
-        slug: "allemand-avance-c1",
-        level: "C1",
-        lessons: 45,
-        duration: "7 mois",
-        price: "350 000 FCFA",
-        badge: "Premium",
-        badgeColor: "bg-amber-500",
-        image: "/images/cours/exam.jpg",
-        description:
-          "Maîtrisez l'allemand à un niveau avancé. Ce cours vous permet de comprendre une grande variété de textes longs et exigeants et de vous exprimer de façon fluide.",
-        objectives:
-          "Comprendre des textes longs et exigeants, s'exprimer de façon fluide et spontanée, utiliser la langue de manière flexible et efficace, rédiger des textes bien structurés sur des sujets complexes.",
-        prerequisites: "Niveau B2 ou équivalent. Bonne maîtrise de la grammaire allemande.",
-      },
-    }),
-    prisma.course.create({
-      data: {
         title: "Préparation TestDaF / Goethe-Zertifikat B2",
         slug: "preparation-testdaf-goethe-b2",
         level: "B2",
@@ -223,8 +205,8 @@ async function main() {
     }),
     prisma.course.create({
       data: {
-        title: "Allemand des Affaires B2-C1",
-        slug: "allemand-des-affaires-b2-c1",
+        title: "Allemand des Affaires B2",
+        slug: "allemand-des-affaires-b2",
         level: "B2",
         lessons: 35,
         duration: "4 mois",
@@ -239,27 +221,9 @@ async function main() {
         prerequisites: "Niveau B1 minimum. Expérience professionnelle souhaitée.",
       },
     }),
-    prisma.course.create({
-      data: {
-        title: "Allemand pour les Universités C1",
-        slug: "allemand-universites-c1",
-        level: "C1",
-        lessons: 48,
-        duration: "6 mois",
-        price: "400 000 FCFA",
-        badge: "Universitaire",
-        badgeColor: "bg-violet-600",
-        image: "/images/cours/exam.jpg",
-        description:
-          "Préparez-vous aux études supérieures en Allemagne. Ce cours spécialisé couvre le vocabulaire académique, la rédaction scientifique et la compréhension de cours magistraux en allemand.",
-        objectives:
-          "Comprendre des conférences et séminaires complexes, rédiger des essais académiques, participer à des discussions universitaires, maîtriser le vocabulaire technique de votre domaine.",
-        prerequisites: "Niveau B2 confirmé. Admission dans un programme d'études en Allemagne recommandée.",
-      },
-    }),
   ]);
 
-  console.log("✅ Created 8 courses");
+  console.log("✅ Created 6 courses");
 
   // Create enrollments for Marc
   await prisma.enrollment.createMany({
@@ -284,7 +248,7 @@ async function main() {
       },
       {
         userId: marc.id,
-        courseId: courses[5].id, // TestDaF - in progress
+        courseId: courses[4].id, // TestDaF - in progress
         progress: 20,
         status: "active",
       },
@@ -447,7 +411,7 @@ async function main() {
         roomName: `deutsch-institut-b1-${Math.random().toString(36).slice(2, 10)}`,
       },
       {
-        courseId: courses[5].id, // TestDaF/Goethe B2
+        courseId: courses[4].id, // TestDaF/Goethe B2
         title: "Simulation d'examen oral TestDaF",
         description: "Entraînement en conditions réelles avec correction immédiate.",
         startAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7 + 1000 * 60 * 60 * 2),

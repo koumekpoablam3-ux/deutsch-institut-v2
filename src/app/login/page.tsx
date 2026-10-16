@@ -22,8 +22,6 @@ const LEVELS = [
   { label: "Élémentaire (A2)", value: "A2" },
   { label: "Intermédiaire (B1)", value: "B1" },
   { label: "Interm. Supérieur (B2)", value: "B2" },
-  { label: "Avancé (C1)", value: "C1" },
-  { label: "Maîtrise (C2)", value: "C2" },
 ]
 
 export default function LoginPage() {
