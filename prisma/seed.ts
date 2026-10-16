@@ -3,8 +3,38 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+const DEFAULT_HERO_SLIDES = [
+  {
+    image: "/images/hero/hero-1.jpg",
+    title: "L'allemand appliqué aux",
+    highlight: "soins médicaux et à la restauration",
+    subtitle: "Des formations spécialisées pour exercer votre métier en Allemagne, en présentiel ou en ligne.",
+    pills: ["En présentiel", "En ligne"],
+    tagsTitle: "Nos centres sont présents au :",
+    tags: ["Togo", "Bénin", "Gabon", "Côte d'Ivoire", "Cameroun", "Sénégal"],
+  },
+  {
+    image: "/images/hero/hero-2.jpg",
+    title: "Voyagez pour seulement",
+    highlight: "850 000 FCFA",
+    subtitle: "Puis payez 100 € par mois pendant 33 mois, une fois arrivé en Allemagne.",
+  },
+  {
+    image: "/images/hero/hero-3.jpg",
+    title: "Notre partenaire",
+    highlight: "en Allemagne",
+    partnerName: "Partenaire en Allemagne",
+    partnerLogo: "/images/partner/partenaire-logo.svg",
+    partnerText: "Présentation du partenaire en Allemagne : activité, engagements et accompagnement des candidats à leur arrivée.",
+  },
+];
+
 async function main() {
   console.log("🌱 Seeding database...");
+
+  // Carrousel de l'accueil : on repart des 3 slides par défaut (les réglages et les images téléversées sont conservés)
+  await prisma.heroSlide.deleteMany();
+  await prisma.heroSlide.createMany({ data: DEFAULT_HERO_SLIDES.map((s, position) => ({ ...s, position })) });
 
   // Clean existing data — delete in reverse dependency order to avoid FK errors
   await prisma.review.deleteMany();

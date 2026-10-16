@@ -272,3 +272,61 @@ model Article {
 
   author      User     @relation(fields: [authorId], references: [id])
 }
+
+// ─────────────────────────────────────────────────────────────
+// Contenu de la page d'accueil, modifiable depuis le panneau admin
+// ─────────────────────────────────────────────────────────────
+
+/// Un slide du carrousel de la page d'accueil.
+model HeroSlide {
+  id             String   @id @default(cuid())
+  /// Ordre d'affichage (0 = premier)
+  position       Int      @default(0)
+  /// Slide visible sur le site ou masqué
+  active         Boolean  @default(true)
+  /// URL de l'image de fond : /api/media/<id> (image téléversée), /images/... ou https://...
+  image          String
+  /// Assombrissement de l'image en % (100 = voile standard, 0 = aucun)
+  overlay        Int      @default(100)
+  title          String
+  highlight      String   @default("")
+  subtitle       String   @default("")
+  /// Badge propre à ce slide (null = badge global défini dans les réglages)
+  badge          String?
+  /// Pastilles blanches (ex. "En présentiel", "En ligne")
+  pills          String[] @default([])
+  /// Étiquettes dorées (ex. liste des pays) + texte introductif
+  tags           String[] @default([])
+  tagsTitle      String?
+  /// Bloc partenaire (logo + texte)
+  partnerName    String?
+  partnerLogo    String?
+  partnerText    String?
+  /// Boutons d'action (null = valeurs par défaut du site)
+  showButtons    Boolean  @default(true)
+  primaryLabel   String?
+  primaryHref    String?
+  secondaryLabel String?
+  secondaryHref  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([position])
+}
+
+/// Réglages du site au format clé / valeur JSON (hero, stats, cta).
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+/// Images téléversées depuis l'admin, stockées directement dans PostgreSQL.
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now())
+}
