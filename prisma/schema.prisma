@@ -249,9 +249,18 @@ model LiveSession {
   id              String   @id @default(cuid())
   courseId        String
   title           String
+  /// Résumé court affiché sur la carte de la session
+  summary         String?
+  /// Description complète
   description     String?
   startAt         DateTime
   durationMinutes Int      @default(60)
+  /// Plateforme de visioconférence. Valeurs valides : jitsi, zoom, meet, youtube, streamyard
+  platform        String   @default("jitsi")
+  /// Lien de la salle (Zoom, Meet, YouTube Live, StreamYard). Vide pour Jitsi (salle créée automatiquement)
+  meetingUrl      String?
+  /// Statut. Valeurs valides : scheduled, live, ended, cancelled
+  status          String   @default("scheduled")
   roomName        String   @unique
   createdAt       DateTime @default(now())
 

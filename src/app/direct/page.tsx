@@ -5,13 +5,17 @@ import Link from "next/link"
 import { Video, Calendar, Clock, Loader2, Radio, LogIn } from "lucide-react"
 import Header from "@/components/sections/Header"
 import Footer from "@/components/sections/Footer"
+import { platformInfo } from "@/lib/live-platforms"
 
 interface LiveSession {
   id: string
   title: string
+  summary: string | null
   description: string | null
   startAt: string
   durationMinutes: number
+  platform: string
+  status: string
   course: { title: string; slug: string; level: string }
 }
 
@@ -39,6 +43,7 @@ export default function DirectPage() {
   }, [])
 
   const isLive = (s: LiveSession) => {
+    if (s.status === "live") return true
     const start = new Date(s.startAt).getTime()
     const end = start + s.durationMinutes * 60000
     const now = Date.now()
@@ -90,11 +95,12 @@ export default function DirectPage() {
                   </div>
                   <h3 className="font-bold text-[#1B3A5C] dark:text-white mb-1">{s.title}</h3>
                   <p className="text-xs text-[#1B3A5C]/40 dark:text-white/30 mb-3">{s.course.title}</p>
-                  {s.description && <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 mb-4">{s.description}</p>}
+                  {(s.summary || s.description) && <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 mb-4 line-clamp-3">{s.summary || s.description}</p>}
                   <div className="flex items-center gap-4 text-xs text-[#1B3A5C]/50 dark:text-white/40 mb-4">
                     <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{new Date(s.startAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}</span>
                     <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{new Date(s.startAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })} · {s.durationMinutes} min</span>
                   </div>
+                  <p className="text-xs text-[#1B3A5C]/40 dark:text-white/30 mb-4 flex items-center gap-1.5"><Video className="h-3.5 w-3.5" />Via {platformInfo(s.platform).label.replace(" (intégré au site)", "")}</p>
                   <Link href={`/direct/${s.id}`} className="inline-flex items-center gap-2 bg-[#1B3A5C] hover:bg-[#0f2a45] text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
                     <Video className="h-4 w-4" /> Rejoindre la session
                   </Link>
