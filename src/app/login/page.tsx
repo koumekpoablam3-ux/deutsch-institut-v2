@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState } from "react"
 import { Eye, EyeOff, Globe, GraduationCap, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,7 @@ const LEVELS = [
 ]
 
 export default function LoginPage() {
+  const { t } = useI18n()
   const [tab, setTab] = useState<"login" | "register">("login")
   const [showPw, setShowPw] = useState(false)
   const [showConfirmPw, setShowConfirmPw] = useState(false)
@@ -65,7 +67,7 @@ export default function LoginPage() {
       // Connexion réussie : on redirige manuellement
       window.location.href = "/dashboard"
     } catch {
-      setLoginError("Une erreur est survenue. Veuillez réessayer.")
+      setLoginError(t("Une erreur est survenue. Veuillez réessayer."))
       setLoginLoading(false)
     }
   }
@@ -74,7 +76,7 @@ export default function LoginPage() {
     e.preventDefault()
 
     if (regPassword !== regConfirmPw) {
-      toast.error("Les mots de passe ne correspondent pas")
+      toast.error(t("Les mots de passe ne correspondent pas"))
       return
     }
 
@@ -96,7 +98,7 @@ export default function LoginPage() {
       const data = await res.json()
 
       if (res.ok && data.success) {
-        toast.success("Compte créé avec succès ! Vous pouvez maintenant vous connecter.")
+        toast.success(t("Compte créé avec succès ! Vous pouvez maintenant vous connecter."))
         setTab("login")
         setLoginEmail(regEmail)
         // Reset register fields
@@ -107,10 +109,10 @@ export default function LoginPage() {
         setRegTelephone("")
         setRegLevel("A1")
       } else {
-        toast.error(data.error || "Erreur lors de la création du compte")
+        toast.error(t(data.error || "Erreur lors de la création du compte"))
       }
     } catch {
-      toast.error("Erreur de connexion au serveur. Veuillez réessayer.")
+      toast.error(t("Erreur de connexion au serveur. Veuillez réessayer."))
     } finally {
       setRegLoading(false)
     }
@@ -123,22 +125,22 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-xl bg-[#1B3A5C] flex items-center justify-center mx-auto mb-3">
             <GraduationCap className="h-6 w-6 text-[#D4A843]" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#1B3A5C] dark:text-white">Deutsch-Institut</h1>
-          <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mt-1">Deutsch Für Alle</p>
+          <h1 className="text-2xl font-extrabold text-[#1B3A5C] dark:text-white">{t("Deutsch-Institut")}</h1>
+          <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mt-1">{t("Deutsch Für Alle")}</p>
         </div>
 
         <div className="flex mb-6 bg-[#f8f9fb] dark:bg-[#0a1628] rounded-lg p-1">
-          <button onClick={() => { setTab("login"); setLoginError("") }} className={"flex-1 py-2 rounded-md text-sm font-semibold transition-colors " + (tab === "login" ? "bg-white dark:bg-[#132d4a] shadow text-[#1B3A5C] dark:text-white" : "text-[#1B3A5C]/50 dark:text-white/40")}>Se connecter</button>
-          <button onClick={() => setTab("register")} className={"flex-1 py-2 rounded-md text-sm font-semibold transition-colors " + (tab === "register" ? "bg-white dark:bg-[#132d4a] shadow text-[#1B3A5C] dark:text-white" : "text-[#1B3A5C]/50 dark:text-white/40")}>Créer un compte</button>
+          <button onClick={() => { setTab("login"); setLoginError("") }} className={"flex-1 py-2 rounded-md text-sm font-semibold transition-colors " + (tab === "login" ? "bg-white dark:bg-[#132d4a] shadow text-[#1B3A5C] dark:text-white" : "text-[#1B3A5C]/50 dark:text-white/40")}>{t("Se connecter")}</button>
+          <button onClick={() => setTab("register")} className={"flex-1 py-2 rounded-md text-sm font-semibold transition-colors " + (tab === "register" ? "bg-white dark:bg-[#132d4a] shadow text-[#1B3A5C] dark:text-white" : "text-[#1B3A5C]/50 dark:text-white/40")}>{t("Créer un compte")}</button>
         </div>
 
         {tab === "login" ? (
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Email</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Email")}</Label>
               <Input
                 type="email"
-                placeholder="votre@email.com"
+                placeholder={t("votre@email.com")}
                 className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
@@ -147,11 +149,11 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Mot de passe</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Mot de passe")}</Label>
               <div className="relative">
                 <Input
                   type={showPw ? "text" : "password"}
-                  placeholder="Mot de passe"
+                  placeholder={t("Mot de passe")}
                   className="h-11 pr-10 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
@@ -165,27 +167,27 @@ export default function LoginPage() {
             </div>
 
             {loginError && (
-              <p className="text-sm text-red-500 dark:text-red-400 text-center">{loginError}</p>
+              <p className="text-sm text-red-500 dark:text-red-400 text-center">{t(loginError)}</p>
             )}
 
             <Button type="submit" disabled={loginLoading} className="w-full bg-[#1B3A5C] hover:bg-[#0f2a45] text-white font-bold h-11">
               {loginLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Connexion...
+                  {t("Connexion...")}
                 </span>
               ) : (
-                "Se connecter"
+                t("Se connecter")
               )}
             </Button>
-            <p className="text-center text-sm"><Link href="/forgot-password" className="text-[#D4A843] font-medium hover:underline">Mot de passe oublié ?</Link></p>
+            <p className="text-center text-sm"><Link href="/forgot-password" className="text-[#D4A843] font-medium hover:underline">{t("Mot de passe oublié ?")}</Link></p>
           </form>
         ) : (
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Nom complet</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Nom complet")}</Label>
               <Input
-                placeholder="Votre nom"
+                placeholder={t("Votre nom")}
                 className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                 value={regName}
                 onChange={(e) => setRegName(e.target.value)}
@@ -194,10 +196,10 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Email</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Email")}</Label>
               <Input
                 type="email"
-                placeholder="votre@email.com"
+                placeholder={t("votre@email.com")}
                 className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                 value={regEmail}
                 onChange={(e) => setRegEmail(e.target.value)}
@@ -206,11 +208,11 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Mot de passe</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Mot de passe")}</Label>
               <div className="relative">
                 <Input
                   type={showPw ? "text" : "password"}
-                  placeholder="Mot de passe (min. 6 caractères)"
+                  placeholder={t("Mot de passe (min. 6 caractères)")}
                   className="h-11 pr-10 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                   value={regPassword}
                   onChange={(e) => setRegPassword(e.target.value)}
@@ -224,11 +226,11 @@ export default function LoginPage() {
               </div>
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Confirmer le mot de passe</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Confirmer le mot de passe")}</Label>
               <div className="relative">
                 <Input
                   type={showConfirmPw ? "text" : "password"}
-                  placeholder="Confirmer le mot de passe"
+                  placeholder={t("Confirmer le mot de passe")}
                   className="h-11 pr-10 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                   value={regConfirmPw}
                   onChange={(e) => setRegConfirmPw(e.target.value)}
@@ -242,10 +244,10 @@ export default function LoginPage() {
               </div>
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Téléphone</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Téléphone")}</Label>
               <Input
                 type="tel"
-                placeholder="+33 6 12 34 56 78 (optionnel)"
+                placeholder={t("+33 6 12 34 56 78 (optionnel)")}
                 className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                 value={regTelephone}
                 onChange={(e) => setRegTelephone(e.target.value)}
@@ -253,15 +255,15 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Niveau d&apos;allemand</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Niveau d'allemand")}</Label>
               <Select value={regLevel} onValueChange={(v) => setRegLevel(v ?? "A1")}>
                 <SelectTrigger className="w-full h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]">
-                  <SelectValue placeholder="Sélectionner votre niveau" />
+                  <SelectValue placeholder={t("Sélectionner votre niveau")} />
                 </SelectTrigger>
                 <SelectContent>
                   {LEVELS.map((level) => (
                     <SelectItem key={level.value} value={level.value}>
-                      {level.label}
+                      {t(level.label)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -271,25 +273,25 @@ export default function LoginPage() {
               {regLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Création...
+                  {t("Création...")}
                 </span>
               ) : (
-                "Créer mon compte"
+                t("Créer mon compte")
               )}
             </Button>
           </form>
         )}
 
-        <div className="flex items-center gap-3 my-6"><div className="flex-1 h-px bg-[#1B3A5C]/10" /><span className="text-xs text-[#1B3A5C]/40 dark:text-white/30">ou</span><div className="flex-1 h-px bg-[#1B3A5C]/10" /></div>
+        <div className="flex items-center gap-3 my-6"><div className="flex-1 h-px bg-[#1B3A5C]/10" /><span className="text-xs text-[#1B3A5C]/40 dark:text-white/30">{t("ou")}</span><div className="flex-1 h-px bg-[#1B3A5C]/10" /></div>
         <div className="relative group">
           <Button type="button" variant="outline" disabled className="w-full border-[#1B3A5C]/20 text-[#1B3A5C]/40 dark:text-white/30 font-medium h-11 cursor-not-allowed">
-            <Globe className="mr-2 h-4 w-4" />S&apos;inscrire avec Google
+            <Globe className="mr-2 h-4 w-4" />{t("S'inscrire avec Google")}
           </Button>
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-[#1B3A5C] dark:bg-white text-white dark:text-[#1B3A5C] text-xs rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap">
-            Bientôt disponible
+            {t("Bientôt disponible")}
           </div>
         </div>
-        <p className="text-center text-sm text-[#1B3A5C]/50 dark:text-white/40 mt-6"><Link href="/" className="text-[#D4A843] font-medium">Retour à l&apos;accueil</Link></p>
+        <p className="text-center text-sm text-[#1B3A5C]/50 dark:text-white/40 mt-6"><Link href="/" className="text-[#D4A843] font-medium">{t("Retour à l'accueil")}</Link></p>
       </motion.div>
     </div>
   )

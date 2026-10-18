@@ -1,9 +1,9 @@
 "use client"
 
 import { signOut } from "next-auth/react"
-import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, CreditCard, Star, Video, Newspaper, GalleryHorizontal, PenLine, ImageIcon, Phone } from "lucide-react"
+import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, CreditCard, Star, Video, Newspaper, GalleryHorizontal, PenLine, ImageIcon, Phone, Languages } from "lucide-react"
 
-export type AdminTab = "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "contact" | "medias"
+export type AdminTab = "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "contact" | "traductions" | "medias"
 
 const tabs: { key: AdminTab; icon: typeof BookOpen; label: string }[] = [
   { key: "cours", icon: BookOpen, label: "Cours" },
@@ -16,6 +16,7 @@ const tabs: { key: AdminTab; icon: typeof BookOpen; label: string }[] = [
   { key: "carrousel", icon: GalleryHorizontal, label: "Carrousel d'accueil" },
   { key: "contenu", icon: PenLine, label: "Contenu du site" },
   { key: "contact", icon: Phone, label: "Coordonnées & pied de page" },
+  { key: "traductions", icon: Languages, label: "Traductions" },
   { key: "medias", icon: ImageIcon, label: "Médiathèque" },
 ]
 
@@ -30,6 +31,7 @@ const tabTitles: Record<AdminTab, string> = {
   carrousel: "Carrousel de la page d'accueil",
   contenu: "Contenu de la page d'accueil",
   contact: "Coordonnées, WhatsApp et réseaux sociaux",
+  traductions: "Traductions (anglais et allemand)",
   medias: "Médiathèque",
 }
 

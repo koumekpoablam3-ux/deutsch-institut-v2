@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState } from "react"
 import { X } from "lucide-react"
 import { useContactSettings } from "@/lib/use-contact-settings"
@@ -20,6 +21,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 }
 
 export default function WhatsAppWidget() {
+  const { t } = useI18n()
   // Numéro modifiable dans l'admin (Coordonnées)
   const { whatsappNumber: WHATSAPP_NUMBER, whatsappDisplay: WHATSAPP_DISPLAY } = useContactSettings()
   const [open, setOpen] = useState(false)
@@ -39,9 +41,9 @@ export default function WhatsAppWidget() {
               <WhatsAppIcon className="h-5 w-5 text-emerald-500" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-bold text-sm">Support Deutsch-Institut</p>
+              <p className="text-white font-bold text-sm">{t("Support Deutsch-Institut")}</p>
               <p className="text-white/80 text-[11px] flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-white inline-block" /> En ligne · répond vite
+                <span className="w-1.5 h-1.5 rounded-full bg-white inline-block" /> {t("En ligne · répond vite")}
               </p>
             </div>
             <button onClick={() => setOpen(false)} className="text-white/80 hover:text-white shrink-0">
@@ -51,33 +53,33 @@ export default function WhatsAppWidget() {
 
           <div className="p-4 bg-[#f0f5f0] dark:bg-[#0a1628]">
             <div className="bg-white dark:bg-[#132d4a] rounded-xl rounded-tl-sm px-3.5 py-2.5 text-sm text-[#1B3A5C] dark:text-white/80 shadow-sm mb-3">
-              👋 Bonjour ! Comment pouvons-nous vous aider ?
+              {t("👋 Bonjour ! Comment pouvons-nous vous aider ?")}
             </div>
 
             <div className="space-y-2">
               {QUICK_MESSAGES.map((msg) => (
                 <button
                   key={msg}
-                  onClick={() => openWhatsApp(msg)}
+                  onClick={() => openWhatsApp(t(msg))}
                   className="w-full text-left bg-white dark:bg-[#132d4a] hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-[#1B3A5C] dark:text-white/90 text-sm rounded-xl px-3.5 py-2.5 shadow-sm flex items-center justify-between gap-2 transition-colors border border-transparent hover:border-emerald-300"
                 >
-                  <span>{msg}</span>
+                  <span>{t(msg)}</span>
                   <span className="text-emerald-500 shrink-0">→</span>
                 </button>
               ))}
             </div>
 
             <button
-              onClick={() => openWhatsApp("Bonjour,")}
+              onClick={() => openWhatsApp(t("Bonjour,"))}
               className="mt-3 w-full text-center text-xs text-[#1B3A5C]/60 dark:text-white/50 underline underline-offset-2 hover:text-[#1B3A5C] dark:hover:text-white"
             >
-              Écrire un message personnalisé →
+              {t("Écrire un message personnalisé →")}
             </button>
           </div>
 
           <div className="px-4 py-2.5 bg-white dark:bg-[#132d4a] border-t border-[#1B3A5C]/10 dark:border-white/10 text-center">
             <p className="text-[11px] text-[#1B3A5C]/40 dark:text-white/30">
-              Vous serez redirigé vers WhatsApp ({WHATSAPP_DISPLAY})
+              {t("Vous serez redirigé vers WhatsApp (")}{WHATSAPP_DISPLAY})
             </p>
           </div>
         </div>
@@ -86,7 +88,7 @@ export default function WhatsAppWidget() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 shadow-lg flex items-center justify-center transition-transform hover:scale-105"
-        title="Contacter le support sur WhatsApp"
+        title={t("Contacter le support sur WhatsApp")}
       >
         {open ? <X className="h-6 w-6 text-white" /> : <WhatsAppIcon className="h-7 w-7 text-white" />}
       </button>

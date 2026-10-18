@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useEffect, useCallback } from "react"
 import { Star, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -36,6 +37,7 @@ function Stars({ value, onChange, size = 20 }: { value: number; onChange?: (v: n
 }
 
 export default function CourseReviews({ slug, courseId }: { slug: string; courseId: string }) {
+  const { t, intlLocale } = useI18n()
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [canReview, setCanReview] = useState(false)
@@ -65,7 +67,7 @@ export default function CourseReviews({ slug, courseId }: { slug: string; course
   useEffect(() => { fetchReviews(); checkEligibility() }, [fetchReviews, checkEligibility])
 
   const handleSubmit = async () => {
-    if (rating === 0) { toast.error("Veuillez sélectionner une note"); return }
+    if (rating === 0) { toast.error(t("Veuillez sélectionner une note")); return }
     setSubmitting(true)
     try {
       const res = await fetch(`/api/courses/${slug}/reviews`, {
@@ -75,14 +77,14 @@ export default function CourseReviews({ slug, courseId }: { slug: string; course
       })
       const data = await res.json()
       if (res.ok) {
-        toast.success(data.data?.message || "Avis publié")
+        toast.success(t(data.data?.message || "Avis publié"))
         setRating(0)
         setComment("")
         fetchReviews()
       } else {
-        toast.error(data.error || "Erreur lors de l'envoi de l'avis")
+        toast.error(t(data.error || "Erreur lors de l'envoi de l'avis"))
       }
-    } catch { toast.error("Erreur de connexion") }
+    } catch { toast.error(t("Erreur de connexion")) }
     finally { setSubmitting(false) }
   }
 
@@ -91,7 +93,7 @@ export default function CourseReviews({ slug, courseId }: { slug: string; course
   return (
     <div className="bg-white dark:bg-[#132d4a] rounded-2xl p-6 lg:p-8 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-[#1B3A5C] dark:text-white">Avis des étudiants</h2>
+        <h2 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{t("Avis des étudiants")}</h2>
         {reviews.length > 0 && (
           <div className="flex items-center gap-2">
             <Stars value={Math.round(avg)} size={18} />
@@ -103,16 +105,16 @@ export default function CourseReviews({ slug, courseId }: { slug: string; course
 
       {canReview && (
         <div className="mb-6 p-4 rounded-xl bg-[#1B3A5C]/5 dark:bg-white/5">
-          <p className="text-sm font-semibold text-[#1B3A5C] dark:text-white mb-2">Laisser un avis</p>
+          <p className="text-sm font-semibold text-[#1B3A5C] dark:text-white mb-2">{t("Laisser un avis")}</p>
           <Stars value={rating} onChange={setRating} size={26} />
           <Textarea
-            placeholder="Partagez votre expérience avec ce cours (optionnel)"
+            placeholder={t("Partagez votre expérience avec ce cours (optionnel)")}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className="mt-3 bg-white dark:bg-[#0f2440]"
           />
           <Button onClick={handleSubmit} disabled={submitting} className="mt-3 bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold">
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Publier mon avis"}
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : t("Publier mon avis")}
           </Button>
         </div>
       )}
@@ -120,7 +122,7 @@ export default function CourseReviews({ slug, courseId }: { slug: string; course
       {loading ? (
         <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 text-[#D4A843] animate-spin" /></div>
       ) : reviews.length === 0 ? (
-        <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30">Aucun avis pour le moment. Soyez le premier à partager votre expérience !</p>
+        <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30">{t("Aucun avis pour le moment. Soyez le premier à partager votre expérience !")}</p>
       ) : (
         <div className="space-y-4">
           {reviews.map((r) => (
@@ -130,7 +132,7 @@ export default function CourseReviews({ slug, courseId }: { slug: string; course
                 <Stars value={r.rating} size={14} />
               </div>
               {r.comment && <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50">{r.comment}</p>}
-              <p className="text-[10px] text-[#1B3A5C]/30 dark:text-white/25 mt-1">{new Date(r.createdAt).toLocaleDateString("fr-FR")}</p>
+              <p className="text-[10px] text-[#1B3A5C]/30 dark:text-white/25 mt-1">{new Date(r.createdAt).toLocaleDateString(intlLocale)}</p>
             </div>
           ))}
         </div>

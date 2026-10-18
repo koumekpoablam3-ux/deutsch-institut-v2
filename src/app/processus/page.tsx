@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { FileText, BookOpen, Award, Plane, CheckCircle, ChevronDown } from "lucide-react"
@@ -44,6 +45,7 @@ const faqs = [
 ]
 
 export default function ProcessusPage() {
+  const { t } = useI18n()
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const toggleFaq = (index: number) => {
@@ -61,9 +63,9 @@ export default function ProcessusPage() {
           <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-[#D4A843]/10" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <span className="inline-block bg-[#D4A843]/20 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">Notre Méthode</span>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-3">Comment ça marche ?</h1>
-              <p className="text-white/70 max-w-xl text-lg">Un processus simple et accompagné, de l'inscription jusqu'à votre départ pour l'Allemagne.</p>
+              <span className="inline-block bg-[#D4A843]/20 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">{t("Notre Méthode")}</span>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-3">{t("Comment ça marche ?")}</h1>
+              <p className="text-white/70 max-w-xl text-lg">{t("Un processus simple et accompagné, de l'inscription jusqu'à votre départ pour l'Allemagne.")}</p>
             </motion.div>
           </div>
         </div>
@@ -81,16 +83,16 @@ export default function ProcessusPage() {
                       <step.icon className="h-7 w-7 text-[#D4A843]" />
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-[#D4A843]">ETAPE {i + 1}</span>
-                      <h3 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{step.title}</h3>
+                      <span className="text-xs font-bold text-[#D4A843]">{t("ETAPE")}{" "}{i + 1}</span>
+                      <h3 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{t(step.title)}</h3>
                     </div>
                   </div>
-                  <p className="text-[#1B3A5C]/60 dark:text-white/50 leading-relaxed mb-6">{step.description}</p>
+                  <p className="text-[#1B3A5C]/60 dark:text-white/50 leading-relaxed mb-6">{t(step.description)}</p>
                   <div className={"space-y-2.5 " + (i % 2 === 1 ? "lg:space-y-2.5" : "")}>
                     {step.details.map((detail, j) => (
                       <div key={j} className={"flex items-center gap-2.5 " + (i % 2 === 1 ? "lg:justify-end" : "")}>
                         <CheckCircle className="h-4 w-4 text-[#D4A843] shrink-0" />
-                        <span className="text-sm text-[#1B3A5C]/70 dark:text-white/50">{detail}</span>
+                        <span className="text-sm text-[#1B3A5C]/70 dark:text-white/50">{t(detail)}</span>
                       </div>
                     ))}
                   </div>
@@ -110,8 +112,8 @@ export default function ProcessusPage() {
       <section className="py-20 bg-white dark:bg-[#0a1628]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-            <span className="inline-block bg-[#D4A843]/15 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">FAQ</span>
-            <h2 className="text-3xl font-extrabold text-[#1B3A5C] dark:text-white">Questions fréquentes</h2>
+            <span className="inline-block bg-[#D4A843]/15 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">{t("FAQ")}</span>
+            <h2 className="text-3xl font-extrabold text-[#1B3A5C] dark:text-white">{t("Questions fréquentes")}</h2>
           </motion.div>
           <div className="space-y-3">
             {faqs.map((f, i) => {
@@ -129,12 +131,12 @@ export default function ProcessusPage() {
                     onClick={() => toggleFaq(i)}
                     className="w-full flex items-center justify-between gap-3 p-5 text-left cursor-pointer"
                   >
-                    <h3 className="font-bold text-[#1B3A5C] dark:text-white text-sm sm:text-base">{f.q}</h3>
+                    <h3 className="font-bold text-[#1B3A5C] dark:text-white text-sm sm:text-base">{t(f.q)}</h3>
                     <ChevronDown className={"h-5 w-5 text-[#D4A843] shrink-0 transition-transform duration-300 " + (isOpen ? "rotate-180" : "")} />
                   </button>
                   <div className={"grid transition-all duration-300 ease-in-out " + (isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
                     <div className="overflow-hidden">
-                      <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 leading-relaxed px-5 pb-5 pt-0">{f.a}</p>
+                      <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 leading-relaxed px-5 pb-5 pt-0">{t(f.a)}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -147,11 +149,11 @@ export default function ProcessusPage() {
       {/* CTA */}
       <section className="py-16 bg-gradient-to-br from-[#1B3A5C] to-[#0f2a45]">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-extrabold text-white mb-4">Prêt à commencer votre parcours ?</h2>
-          <p className="text-white/60 mb-8">Inscrivez-vous maintenant et commencez votre formation en allemand.</p>
+          <h2 className="text-3xl font-extrabold text-white mb-4">{t("Prêt à commencer votre parcours ?")}</h2>
+          <p className="text-white/60 mb-8">{t("Inscrivez-vous maintenant et commencez votre formation en allemand.")}</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/contact"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">S'inscrire maintenant</Button></Link>
-            <Link href="/cours"><Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8">Voir les cours</Button></Link>
+            <Link href="/contact"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">{t("S'inscrire maintenant")}</Button></Link>
+            <Link href="/cours"><Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8">{t("Voir les cours")}</Button></Link>
           </div>
         </div>
       </section>

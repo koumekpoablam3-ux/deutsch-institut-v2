@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
@@ -33,6 +34,7 @@ interface QuizQuestion {
 }
 
 export default function ApprendrePage() {
+  const { t } = useI18n()
   const params = useParams()
   const router = useRouter()
   const slug = params.slug as string
@@ -67,9 +69,9 @@ export default function ApprendrePage() {
         setCertificate(data.data.certificate)
         if (data.data.modules.length > 0 && !activeId) setActiveId(data.data.modules[0].id)
       } else {
-        setError(data.error || "Impossible de charger le cours")
+        setError(t(data.error || "Impossible de charger le cours"))
       }
-    } catch { setError("Erreur de connexion") }
+    } catch { setError(t("Erreur de connexion")) }
     finally { setLoading(false) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
@@ -95,11 +97,11 @@ export default function ApprendrePage() {
       if (res.ok && data.success) {
         setModules((prev) => prev.map((m) => (m.id === activeId ? { ...m, completed: true } : m)))
         setAllCompleted(data.data.allCompleted)
-        toast.success("Module marqué comme terminé")
+        toast.success(t("Module marqué comme terminé"))
       } else {
-        toast.error(data.error || "Erreur")
+        toast.error(t(data.error || "Erreur"))
       }
-    } catch { toast.error("Erreur de connexion") }
+    } catch { toast.error(t("Erreur de connexion")) }
     finally { setMarking(false) }
   }
 
@@ -116,14 +118,14 @@ export default function ApprendrePage() {
         setQuestions(data.data.questions)
         if (data.data.certificate) setCertificate(data.data.certificate)
       } else {
-        toast.error(data.error || "Impossible de charger le quiz")
+        toast.error(t(data.error || "Impossible de charger le quiz"))
       }
-    } catch { toast.error("Erreur de connexion") }
+    } catch { toast.error(t("Erreur de connexion")) }
   }
 
   const submitQuiz = async () => {
     if (Object.keys(quizAnswers).length < questions.length) {
-      toast.error("Merci de répondre à toutes les questions")
+      toast.error(t("Merci de répondre à toutes les questions"))
       return
     }
     setSubmittingQuiz(true)
@@ -138,12 +140,12 @@ export default function ApprendrePage() {
       if (res.ok && data.success) {
         setQuizResult({ score: data.data.score, total: data.data.total, passed: data.data.passed })
         if (data.data.certificate) setCertificate(data.data.certificate)
-        if (data.data.passed) toast.success("Félicitations, vous avez réussi le quiz !")
-        else toast.error("Score insuffisant, retentez le quiz après avoir revu le cours")
+        if (data.data.passed) toast.success(t("Félicitations, vous avez réussi le quiz !"))
+        else toast.error(t("Score insuffisant, retentez le quiz après avoir revu le cours"))
       } else {
-        toast.error(data.error || "Erreur lors de la soumission")
+        toast.error(t(data.error || "Erreur lors de la soumission"))
       }
-    } catch { toast.error("Erreur de connexion") }
+    } catch { toast.error(t("Erreur de connexion")) }
     finally { setSubmittingQuiz(false) }
   }
 
@@ -172,9 +174,9 @@ export default function ApprendrePage() {
         <Header />
         <div className="min-h-screen pt-24 flex flex-col items-center justify-center px-4 text-center">
           <Lock className="h-10 w-10 text-[#D4A843] mb-3" />
-          <p className="font-semibold text-[#1B3A5C] dark:text-white mb-1">Accès non disponible</p>
-          <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mb-4">{error}</p>
-          <Link href={`/cours/${slug}`}><Button variant="outline">Retour au cours</Button></Link>
+          <p className="font-semibold text-[#1B3A5C] dark:text-white mb-1">{t("Accès non disponible")}</p>
+          <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mb-4">{t(error)}</p>
+          <Link href={`/cours/${slug}`}><Button variant="outline">{t("Retour au cours")}</Button></Link>
         </div>
         <Footer />
       </>
@@ -187,17 +189,17 @@ export default function ApprendrePage() {
       <div className="min-h-screen pt-16 bg-[#f7f5f0] dark:bg-[#0a1628]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Link href={`/cours/${slug}`} className="inline-flex items-center gap-2 text-sm text-[#1B3A5C]/60 dark:text-white/50 hover:text-[#1B3A5C] dark:hover:text-white mb-4">
-            <ArrowLeft className="h-4 w-4" /> Retour au cours
+            <ArrowLeft className="h-4 w-4" /> {t("Retour au cours")}
           </Link>
           <h1 className="text-2xl font-bold text-[#1B3A5C] dark:text-white mb-6">{courseTitle}</h1>
 
           <div className="grid lg:grid-cols-[280px_1fr] gap-6">
             {/* Sidebar */}
             <div className="bg-white dark:bg-[#132d4a] rounded-2xl shadow-sm p-3 h-fit">
-              <p className="text-xs font-semibold text-[#1B3A5C]/40 dark:text-white/30 uppercase px-2 mb-2">Modules</p>
+              <p className="text-xs font-semibold text-[#1B3A5C]/40 dark:text-white/30 uppercase px-2 mb-2">{t("Modules")}</p>
               <div className="space-y-1">
                 {modules.length === 0 && (
-                  <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30 px-2 py-4">Aucun module n&apos;a encore été publié pour ce cours.</p>
+                  <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30 px-2 py-4">{t("Aucun module n'a encore été publié pour ce cours.")}</p>
                 )}
                 {modules.map((m) => (
                   <button
@@ -231,12 +233,12 @@ export default function ApprendrePage() {
                     }`}
                   >
                     <Award className="h-4 w-4 shrink-0" />
-                    <span className="flex-1">Quiz final</span>
+                    <span className="flex-1">{t("Quiz final")}</span>
                     {!allCompleted && <Lock className="h-3.5 w-3.5" />}
                   </button>
                   {!allCompleted && (
                     <p className="text-[11px] text-[#1B3A5C]/40 dark:text-white/30 px-3 mt-1">
-                      Termine tous les modules pour débloquer le quiz.
+                      {t("Termine tous les modules pour débloquer le quiz.")}
                     </p>
                   )}
                 </>
@@ -247,7 +249,7 @@ export default function ApprendrePage() {
                   href={`/api/certificates/${certificate.id}/download`}
                   className="mt-3 flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg px-3 py-2.5 transition-colors"
                 >
-                  <Download className="h-4 w-4" /> Mon certificat
+                  <Download className="h-4 w-4" /> {t("Mon certificat")}
                 </a>
               )}
             </div>
@@ -256,9 +258,9 @@ export default function ApprendrePage() {
             <div className="bg-white dark:bg-[#132d4a] rounded-2xl shadow-sm p-6 min-h-[400px]">
               {showQuiz ? (
                 <div>
-                  <h2 className="text-lg font-bold text-[#1B3A5C] dark:text-white mb-1">Quiz final</h2>
+                  <h2 className="text-lg font-bold text-[#1B3A5C] dark:text-white mb-1">{t("Quiz final")}</h2>
                   <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mb-6">
-                    Réponds correctement à au moins 70% des questions pour obtenir ton certificat.
+                    {t("Réponds correctement à au moins 70% des questions pour obtenir ton certificat.")}
                   </p>
 
                   {quizResult ? (
@@ -272,21 +274,21 @@ export default function ApprendrePage() {
                         {quizResult.score} / {quizResult.total}
                       </p>
                       <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mb-6">
-                        {quizResult.passed ? "Cours validé, félicitations !" : "Score insuffisant pour valider le cours."}
+                        {quizResult.passed ? t("Cours validé, félicitations !") : t("Score insuffisant pour valider le cours.")}
                       </p>
                       {quizResult.passed && certificate ? (
                         <a
                           href={`/api/certificates/${certificate.id}/download`}
                           className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg px-5 py-2.5"
                         >
-                          <Download className="h-4 w-4" /> Télécharger mon certificat
+                          <Download className="h-4 w-4" /> {t("Télécharger mon certificat")}
                         </a>
                       ) : (
-                        <Button onClick={openQuiz} variant="outline">Retenter le quiz</Button>
+                        <Button onClick={openQuiz} variant="outline">{t("Retenter le quiz")}</Button>
                       )}
                     </div>
                   ) : questions.length === 0 ? (
-                    <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40">Aucun quiz n&apos;a encore été configuré pour ce cours.</p>
+                    <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40">{t("Aucun quiz n'a encore été configuré pour ce cours.")}</p>
                   ) : (
                     <div className="space-y-6">
                       {questions.map((q, qi) => (
@@ -320,7 +322,7 @@ export default function ApprendrePage() {
                         disabled={submittingQuiz}
                         className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold"
                       >
-                        {submittingQuiz ? <Loader2 className="h-4 w-4 animate-spin" /> : "Valider mes réponses"}
+                        {submittingQuiz ? <Loader2 className="h-4 w-4 animate-spin" /> : t("Valider mes réponses")}
                       </Button>
                     </div>
                   )}
@@ -348,14 +350,14 @@ export default function ApprendrePage() {
 
                   {activeModule.type === "link" && activeModule.content && (
                     <a href={activeModule.content} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#D4A843] font-semibold underline underline-offset-2">
-                      <LinkIcon className="h-4 w-4" /> Ouvrir la ressource
+                      <LinkIcon className="h-4 w-4" /> {t("Ouvrir la ressource")}
                     </a>
                   )}
 
                   {activeModule.type === "pdf" && activeModule.fileData && (
                     <div>
                       <iframe
-                        title={activeModule.fileName || "Document PDF"}
+                        title={activeModule.fileName || t("Document PDF")}
                         src={activeModule.fileData}
                         className="w-full rounded-xl border border-[#1B3A5C]/10 dark:border-white/10"
                         style={{ height: "70vh" }}
@@ -365,29 +367,29 @@ export default function ApprendrePage() {
                         download={activeModule.fileName || "document.pdf"}
                         className="inline-flex items-center gap-2 text-[#D4A843] font-semibold text-sm mt-3"
                       >
-                        <Download className="h-4 w-4" /> Télécharger le PDF
+                        <Download className="h-4 w-4" /> {t("Télécharger le PDF")}
                       </a>
                     </div>
                   )}
 
                   {activeModule.content === null && activeModule.type !== "pdf" && (
-                    <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30">Contenu indisponible pour ce module.</p>
+                    <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30">{t("Contenu indisponible pour ce module.")}</p>
                   )}
 
                   <div className="mt-8 pt-6 border-t border-[#1B3A5C]/10 dark:border-white/10">
                     {modules.find((m) => m.id === activeModule.id)?.completed ? (
                       <p className="inline-flex items-center gap-2 text-emerald-500 text-sm font-semibold">
-                        <CheckCircle className="h-4 w-4" /> Module terminé
+                        <CheckCircle className="h-4 w-4" /> {t("Module terminé")}
                       </p>
                     ) : (
                       <Button onClick={markComplete} disabled={marking} className="bg-[#1B3A5C] hover:bg-[#1B3A5C]/90 text-white font-semibold">
-                        {marking ? <Loader2 className="h-4 w-4 animate-spin" /> : "Marquer comme terminé"}
+                        {marking ? <Loader2 className="h-4 w-4 animate-spin" /> : t("Marquer comme terminé")}
                       </Button>
                     )}
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30">Sélectionne un module pour commencer.</p>
+                <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30">{t("Sélectionne un module pour commencer.")}</p>
               )}
             </div>
           </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { CheckCircle, ArrowRight, ArrowLeft, RotateCcw, GraduationCap, Trophy } from "lucide-react"
@@ -106,6 +107,7 @@ function getResult(score: number) {
 }
 
 export default function TestDeNiveauPage() {
+  const { t } = useI18n()
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<(number | null)[]>(new Array(questions.length).fill(null))
   const [showResult, setShowResult] = useState(false)
@@ -145,17 +147,17 @@ export default function TestDeNiveauPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 bg-[#D4A843]/10 text-[#D4A843] text-xs font-bold px-3 py-1.5 rounded-full mb-4">
-              <GraduationCap className="h-3.5 w-3.5" /> Test de niveau
+              <GraduationCap className="h-3.5 w-3.5" /> {t("Test de niveau")}
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1B3A5C] dark:text-white mb-3">Évaluez votre niveau d'allemand</h1>
-            <p className="text-[#1B3A5C]/60 dark:text-white/50 max-w-xl mx-auto">10 questions pour déterminer votre niveau. Répondez honnêtement pour obtenir une recommandation personnalisée.</p>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1B3A5C] dark:text-white mb-3">{t("Évaluez votre niveau d'allemand")}</h1>
+            <p className="text-[#1B3A5C]/60 dark:text-white/50 max-w-xl mx-auto">{t("10 questions pour déterminer votre niveau. Répondez honnêtement pour obtenir une recommandation personnalisée.")}</p>
           </div>
 
           {/* Progress bar */}
           {!showResult && (
             <div className="mb-8">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-semibold text-[#1B3A5C]/50 dark:text-white/40">Question {current + 1} / {questions.length}</span>
+                <span className="text-xs font-semibold text-[#1B3A5C]/50 dark:text-white/40">{t("Question")}{" "}{current + 1} / {questions.length}</span>
                 <span className="text-xs font-semibold text-[#D4A843]">{Math.round(progress)}%</span>
               </div>
               <div className="w-full h-2.5 bg-[#1B3A5C]/10 dark:bg-white/10 rounded-full overflow-hidden">
@@ -179,11 +181,11 @@ export default function TestDeNiveauPage() {
                 className="bg-white dark:bg-[#132d4a] rounded-2xl p-6 sm:p-8 shadow-sm"
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-bold bg-[#1B3A5C]/10 dark:bg-white/10 text-[#1B3A5C]/60 dark:text-white/60 px-2.5 py-1 rounded-full">{categoryLabels[q.category]}</span>
-                  <span className="text-xs font-bold bg-[#D4A843]/10 text-[#D4A843] px-2.5 py-1 rounded-full">Niveau {q.level}</span>
+                  <span className="text-xs font-bold bg-[#1B3A5C]/10 dark:bg-white/10 text-[#1B3A5C]/60 dark:text-white/60 px-2.5 py-1 rounded-full">{t(categoryLabels[q.category])}</span>
+                  <span className="text-xs font-bold bg-[#D4A843]/10 text-[#D4A843] px-2.5 py-1 rounded-full">{t("Niveau")}{" "}{q.level}</span>
                 </div>
 
-                <h2 className="text-lg sm:text-xl font-bold text-[#1B3A5C] dark:text-white mb-6">{q.question}</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-[#1B3A5C] dark:text-white mb-6">{t(q.question)}</h2>
 
                 <div className="space-y-3">
                   {q.options.map((option, i) => (
@@ -201,17 +203,17 @@ export default function TestDeNiveauPage() {
                           ? "border-[#D4A843] text-[#D4A843] bg-[#D4A843]/10"
                           : "border-[#1B3A5C]/20 dark:border-white/20 text-[#1B3A5C]/40"
                       )}>{String.fromCharCode(65 + i)}</span>
-                      {option}
+                      {t(option)}
                     </button>
                   ))}
                 </div>
 
                 <div className="flex justify-between mt-8">
                   <Button variant="outline" onClick={goPrev} disabled={current === 0} className="text-sm">
-                    <ArrowLeft className="h-4 w-4 mr-1.5" /> Précédent
+                    <ArrowLeft className="h-4 w-4 mr-1.5" /> {t("Précédent")}
                   </Button>
                   <Button onClick={goNext} disabled={answers[current] === null} className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-semibold text-sm">
-                    {current === questions.length - 1 ? "Voir le résultat" : "Suivant"} <ArrowRight className="h-4 w-4 ml-1.5" />
+                    {current === questions.length - 1 ? t("Voir le résultat") : t("Suivant")} <ArrowRight className="h-4 w-4 ml-1.5" />
                   </Button>
                 </div>
               </motion.div>
@@ -226,18 +228,18 @@ export default function TestDeNiveauPage() {
                   <Trophy className="h-10 w-10 text-white" />
                 </div>
 
-                <h2 className="text-2xl font-extrabold text-[#1B3A5C] dark:text-white mb-2">Votre niveau estimé : {result.level}</h2>
-                <p className="text-[#D4A843] font-semibold mb-4">{result.label}</p>
-                <p className="text-[#1B3A5C]/60 dark:text-white/50 mb-2">Score : {score} / {questions.length}</p>
-                <p className="text-[#1B3A5C]/70 dark:text-white/60 mb-8 max-w-md mx-auto">{result.description}</p>
+                <h2 className="text-2xl font-extrabold text-[#1B3A5C] dark:text-white mb-2">{t("Votre niveau estimé :")}{" "}{result.level}</h2>
+                <p className="text-[#D4A843] font-semibold mb-4">{t(result.label)}</p>
+                <p className="text-[#1B3A5C]/60 dark:text-white/50 mb-2">{t("Score :")}{" "}{score} / {questions.length}</p>
+                <p className="text-[#1B3A5C]/70 dark:text-white/60 mb-8 max-w-md mx-auto">{t(result.description)}</p>
 
                 <div className="flex flex-wrap justify-center gap-4">
                   <Button onClick={restart} variant="outline" className="text-sm">
-                    <RotateCcw className="h-4 w-4 mr-1.5" /> Recommencer
+                    <RotateCcw className="h-4 w-4 mr-1.5" /> {t("Recommencer")}
                   </Button>
                   <Link href="/cours">
                     <Button className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold text-sm px-6">
-                      <CheckCircle className="h-4 w-4 mr-1.5" /> Voir les cours {result.level}
+                      <CheckCircle className="h-4 w-4 mr-1.5" /> {t("Voir les cours")}{" "}{result.level}
                     </Button>
                   </Link>
                 </div>

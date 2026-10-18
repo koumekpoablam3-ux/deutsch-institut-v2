@@ -339,3 +339,17 @@ model Media {
   data      Bytes
   createdAt DateTime @default(now())
 }
+
+/// Traductions des textes saisis dans l'admin (slides, cours, articles…), par langue.
+/// La clé est le texte français d'origine ; sourceHash (SHA-1) garantit l'unicité même pour les textes très longs.
+model Translation {
+  id         String   @id @default(cuid())
+  locale     String   // "en" ou "de"
+  sourceHash String
+  source     String
+  value      String
+  updatedAt  DateTime @updatedAt
+
+  @@unique([locale, sourceHash])
+  @@index([locale])
+}

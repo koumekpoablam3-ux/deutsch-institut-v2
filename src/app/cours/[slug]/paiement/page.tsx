@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { CreditCard, Loader2, ShieldCheck, CheckCircle, Info } from "lucide-react"
@@ -19,6 +20,7 @@ interface Course {
 }
 
 export default function PaiementPage() {
+  const { t } = useI18n()
   const router = useRouter()
   const params = useParams()
   const slug = params.slug as string
@@ -67,8 +69,8 @@ export default function PaiementPage() {
         const res = await fetch(`/api/courses/${slug}`)
         const data = await res.json()
         if (res.ok) setCourse(data.data?.course)
-        else toast.error("Cours introuvable")
-      } catch { toast.error("Erreur de connexion") }
+        else toast.error(t("Cours introuvable"))
+      } catch { toast.error(t("Erreur de connexion")) }
       finally { setLoading(false) }
     })()
   }, [slug, router])
@@ -88,9 +90,9 @@ export default function PaiementPage() {
         setSuccess(true)
         setTimeout(() => router.push("/dashboard"), 2000)
       } else {
-        toast.error(data.error || "Erreur lors du paiement")
+        toast.error(t(data.error || "Erreur lors du paiement"))
       }
-    } catch { toast.error("Erreur de connexion") }
+    } catch { toast.error(t("Erreur de connexion")) }
     finally { setPaying(false) }
   }
 
@@ -116,7 +118,7 @@ export default function PaiementPage() {
           <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6 flex gap-3">
             <Info className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
             <p className="text-xs text-amber-800 dark:text-amber-400">
-              Paiement de démonstration — Aucune transaction réelle ne sera effectuée
+              {t("Paiement de démonstration — Aucune transaction réelle ne sera effectuée")}
             </p>
           </div>
 
@@ -126,14 +128,14 @@ export default function PaiementPage() {
                 <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto">
                   <CheckCircle className="h-8 w-8 text-green-600" />
                 </div>
-                <h2 className="text-xl font-bold text-[#1B3A5C] dark:text-white">Paiement validé !</h2>
-                <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50">Vous êtes inscrit à &quot;{course.title}&quot;. Redirection vers votre tableau de bord...</p>
+                <h2 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{t("Paiement validé !")}</h2>
+                <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50">{t("Vous êtes inscrit à \"")}{course.title}{t("\". Redirection vers votre tableau de bord...")}</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between pb-5 mb-5 border-b border-[#1B3A5C]/10 dark:border-white/10">
                   <div>
-                    <p className="text-xs text-[#1B3A5C]/50 dark:text-white/40">Vous vous inscrivez à</p>
+                    <p className="text-xs text-[#1B3A5C]/50 dark:text-white/40">{t("Vous vous inscrivez à")}</p>
                     <p className="font-bold text-[#1B3A5C] dark:text-white">{course.title}</p>
                   </div>
                   <p className="text-2xl font-extrabold text-[#D4A843]">{course.price}</p>
@@ -141,11 +143,11 @@ export default function PaiementPage() {
 
                 <form onSubmit={handlePay} className="space-y-4">
                   <div>
-                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Nom sur la carte</Label>
-                    <Input required value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Jean Dupont" className="h-11" />
+                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Nom sur la carte")}</Label>
+                    <Input required value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder={t("Jean Dupont")} className="h-11" />
                   </div>
                   <div>
-                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Numéro de carte</Label>
+                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Numéro de carte")}</Label>
                     <div className="relative">
                       <Input required value={cardNumber} onChange={handleCardNumberChange} placeholder="4242 4242 4242 4242" maxLength={19} className="h-11 pl-10" />
                       <CreditCard className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#1B3A5C]/40" />
@@ -153,20 +155,20 @@ export default function PaiementPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Expiration</Label>
-                      <Input required value={cardExpiry} onChange={handleExpiryChange} placeholder="MM/AA" maxLength={5} className="h-11" />
+                      <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Expiration")}</Label>
+                      <Input required value={cardExpiry} onChange={handleExpiryChange} placeholder={t("MM/AA")} maxLength={5} className="h-11" />
                     </div>
                     <div>
-                      <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">CVC</Label>
+                      <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("CVC")}</Label>
                       <Input required value={cardCvc} onChange={(e) => setCardCvc(e.target.value.replace(/\D/g, "").slice(0, 3))} placeholder="123" maxLength={3} className="h-11" />
                     </div>
                   </div>
 
                   <Button type="submit" disabled={paying} className="w-full bg-[#1B3A5C] hover:bg-[#0f2a45] text-white font-bold h-12 mt-2">
-                    {paying ? <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin" />Traitement...</span> : `Payer ${course.price}`}
+                    {paying ? <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin" />{t("Traitement...")}</span> : `Payer ${course.price}`}
                   </Button>
                   <p className="flex items-center justify-center gap-1.5 text-[11px] text-[#1B3A5C]/40 dark:text-white/30">
-                    <ShieldCheck className="h-3.5 w-3.5" /> Paiement simulé — aucune donnée réelle transmise
+                    <ShieldCheck className="h-3.5 w-3.5" /> {t("Paiement simulé — aucune donnée réelle transmise")}
                   </p>
                 </form>
               </>

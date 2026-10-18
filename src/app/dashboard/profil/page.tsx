@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
@@ -33,6 +34,7 @@ interface Profile {
 }
 
 export default function ProfilePage() {
+  const { t } = useI18n()
   const router = useRouter()
   const { update } = useSession()
   const [open, setOpen] = useState(false)
@@ -85,7 +87,7 @@ export default function ProfilePage() {
       const data = await res.json()
 
       if (res.ok) {
-        toast.success("Profil mis à jour avec succès")
+        toast.success(t("Profil mis à jour avec succès"))
         setProfile(data.data?.user)
         setCurrentPassword("")
         setNewPassword("")
@@ -94,10 +96,10 @@ export default function ProfilePage() {
         const updatedUser = data.data?.user
         await update({ name: updatedUser.name, niveau: updatedUser.niveau })
       } else {
-        toast.error(data.error || "Erreur lors de la mise à jour")
+        toast.error(t(data.error || "Erreur lors de la mise à jour"))
       }
     } catch {
-      toast.error("Erreur de connexion au serveur")
+      toast.error(t("Erreur de connexion au serveur"))
     } finally {
       setSaving(false)
     }
@@ -115,7 +117,7 @@ export default function ProfilePage() {
       <div className={"fixed top-0 left-0 h-full w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 " + (open ? "translate-x-0" : "-translate-x-full")}>
         <div className="p-5 flex items-center gap-2.5 border-b border-white/10">
           <div className="w-9 h-9 rounded-lg bg-[#D4A843] flex items-center justify-center"><GraduationCap className="h-5 w-5 text-white" /></div>
-          <div><p className="font-bold text-sm">Deutsch-Institut</p><p className="text-[10px] text-white/50">{profile?.niveau || "A1"}</p></div>
+          <div><p className="font-bold text-sm">{t("Deutsch-Institut")}</p><p className="text-[10px] text-white/50">{profile?.niveau || "A1"}</p></div>
         </div>
         <nav className="p-3 space-y-1">
           {[
@@ -126,13 +128,13 @@ export default function ProfilePage() {
             { icon: User, label: "Mon profil", href: "/dashboard/profil", active: true },
           ].map((item) => (
             <a key={item.label} href={item.href} className={"flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm " + (item.active ? "bg-[#D4A843]/20 text-[#D4A843] font-semibold" : "text-white/60 hover:text-white hover:bg-white/5")}>
-              <item.icon className="h-5 w-5" />{item.label}
+              <item.icon className="h-5 w-5" />{t(item.label)}
             </a>
           ))}
         </nav>
         <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
           <div className="px-3 py-2 mb-2"><p className="text-sm font-medium text-white/80">{profile?.name || ""}</p><p className="text-[10px] text-white/40">{profile?.email || ""}</p></div>
-          <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 w-full"><LogOut className="h-5 w-5" />Se déconnecter</button>
+          <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 w-full"><LogOut className="h-5 w-5" />{t("Se déconnecter")}</button>
         </div>
       </div>
 
@@ -140,33 +142,33 @@ export default function ProfilePage() {
         <div className="p-4 lg:p-8 max-w-2xl">
           <div className="flex items-center gap-3 mb-6">
             <button onClick={() => setOpen(true)} className="lg:hidden"><Menu className="h-6 w-6 text-[#1B3A5C] dark:text-white" /></button>
-            <h1 className="text-xl font-bold text-[#1B3A5C] dark:text-white">Mon profil</h1>
+            <h1 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{t("Mon profil")}</h1>
           </div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <form onSubmit={handleSubmit} className="bg-white dark:bg-[#132d4a] rounded-2xl p-6 shadow-sm space-y-5">
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Nom complet</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Nom complet")}</Label>
               <Input value={name} onChange={(e) => setName(e.target.value)} required className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]" />
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Email</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Email")}</Label>
               <Input value={profile?.email || ""} disabled className="h-11 border-[#1B3A5C]/20 opacity-60" />
-              <p className="text-xs text-[#1B3A5C]/40 dark:text-white/30 mt-1">L&apos;email ne peut pas être modifié.</p>
+              <p className="text-xs text-[#1B3A5C]/40 dark:text-white/30 mt-1">{t("L'email ne peut pas être modifié.")}</p>
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Téléphone</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Téléphone")}</Label>
               <Input type="tel" value={telephone} onChange={(e) => setTelephone(e.target.value)} className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]" />
             </div>
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Niveau d&apos;allemand</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Niveau d'allemand")}</Label>
               <Select value={niveau} onValueChange={(v) => setNiveau(v ?? "A1")}>
                 <SelectTrigger className="w-full h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]">
-                  <SelectValue placeholder="Sélectionner votre niveau" />
+                  <SelectValue placeholder={t("Sélectionner votre niveau")} />
                 </SelectTrigger>
                 <SelectContent>
                   {LEVELS.map((l) => (
-                    <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>
+                    <SelectItem key={l.value} value={l.value}>{t(l.label)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -174,13 +176,13 @@ export default function ProfilePage() {
 
             <div className="pt-2 border-t border-[#1B3A5C]/10 dark:border-white/10">
               <button type="button" onClick={() => setShowPwFields(!showPwFields)} className="flex items-center gap-2 text-sm font-semibold text-[#1B3A5C] dark:text-white mb-3">
-                <Lock className="h-4 w-4" /> Changer le mot de passe
+                <Lock className="h-4 w-4" /> {t("Changer le mot de passe")}
               </button>
 
               {showPwFields && (
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Mot de passe actuel</Label>
+                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Mot de passe actuel")}</Label>
                     <div className="relative">
                       <Input
                         type={showPw ? "text" : "password"}
@@ -195,7 +197,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <div>
-                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Nouveau mot de passe</Label>
+                    <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Nouveau mot de passe")}</Label>
                     <Input
                       type={showPw ? "text" : "password"}
                       value={newPassword}
@@ -210,7 +212,7 @@ export default function ProfilePage() {
             </div>
 
             <Button type="submit" disabled={saving} className="w-full bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold h-11">
-              {saving ? <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin" />Enregistrement...</span> : "Enregistrer les modifications"}
+              {saving ? <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin" />{t("Enregistrement...")}</span> : t("Enregistrer les modifications")}
             </Button>
           </form>
           </motion.div>

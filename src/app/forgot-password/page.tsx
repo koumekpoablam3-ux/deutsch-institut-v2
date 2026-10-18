@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState } from "react"
 import { GraduationCap, Loader2, ArrowLeft, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 
 export default function ForgotPasswordPage() {
+  const { t } = useI18n()
   const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
@@ -28,10 +30,10 @@ export default function ForgotPasswordPage() {
       if (res.ok && data.success) {
         setSent(true)
       } else {
-        setError(data.error || "Une erreur est survenue.")
+        setError(t(data.error || "Une erreur est survenue."))
       }
     } catch {
-      setError("Erreur de connexion au serveur. Veuillez réessayer.")
+      setError(t("Erreur de connexion au serveur. Veuillez réessayer."))
     } finally {
       setLoading(false)
     }
@@ -44,9 +46,9 @@ export default function ForgotPasswordPage() {
           <div className="w-12 h-12 rounded-xl bg-[#1B3A5C] flex items-center justify-center mx-auto mb-3">
             <GraduationCap className="h-6 w-6 text-[#D4A843]" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#1B3A5C] dark:text-white">Mot de passe oublié</h1>
+          <h1 className="text-2xl font-extrabold text-[#1B3A5C] dark:text-white">{t("Mot de passe oublié")}</h1>
           <p className="text-sm text-[#1B3A5C]/50 dark:text-white/40 mt-2">
-            Entrez votre email pour recevoir un lien de réinitialisation.
+            {t("Entrez votre email pour recevoir un lien de réinitialisation.")}
           </p>
         </div>
 
@@ -56,20 +58,20 @@ export default function ForgotPasswordPage() {
               <Mail className="h-7 w-7 text-green-600" />
             </div>
             <p className="text-sm text-[#1B3A5C]/70 dark:text-white/60 leading-relaxed">
-              Si un compte existe avec l&apos;adresse <strong className="text-[#1B3A5C] dark:text-white">{email}</strong>, un lien de réinitialisation vient d&apos;être envoyé.
+              {t("Si un compte existe avec l'adresse")}{" "}<strong className="text-[#1B3A5C] dark:text-white">{email}</strong>{t(", un lien de réinitialisation vient d'être envoyé.")}
             </p>
             <p className="text-xs text-[#1B3A5C]/40 dark:text-white/30">
-              Pensez à vérifier vos courriers indésirables (spam).
+              {t("Pensez à vérifier vos courriers indésirables (spam).")}
             </p>
 
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">Email</Label>
+              <Label className="text-[#1B3A5C] dark:text-white/80 font-medium mb-1.5 block">{t("Email")}</Label>
               <Input
                 type="email"
-                placeholder="votre@email.com"
+                placeholder={t("votre@email.com")}
                 className="h-11 border-[#1B3A5C]/20 focus:border-[#D4A843]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -78,16 +80,16 @@ export default function ForgotPasswordPage() {
               />
             </div>
 
-            {error && <p className="text-sm text-red-500 dark:text-red-400 text-center">{error}</p>}
+            {error && <p className="text-sm text-red-500 dark:text-red-400 text-center">{t(error)}</p>}
 
             <Button type="submit" disabled={loading} className="w-full bg-[#1B3A5C] hover:bg-[#0f2a45] text-white font-bold h-11">
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Envoi...
+                  {t("Envoi...")}
                 </span>
               ) : (
-                "Envoyer le lien"
+                t("Envoyer le lien")
               )}
             </Button>
           </form>
@@ -95,7 +97,7 @@ export default function ForgotPasswordPage() {
 
         <p className="text-center text-sm mt-6">
           <Link href="/login" className="text-[#D4A843] font-medium flex items-center justify-center gap-1 hover:underline">
-            <ArrowLeft className="h-3.5 w-3.5" /> Retour à la connexion
+            <ArrowLeft className="h-3.5 w-3.5" /> {t("Retour à la connexion")}
           </Link>
         </p>
       </motion.div>

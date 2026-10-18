@@ -1,3 +1,4 @@
+import { getServerT } from "@/i18n/server"
 import { db } from "@/lib/db"
 import Link from "next/link"
 import Image from "next/image"
@@ -8,6 +9,7 @@ import Footer from "@/components/sections/Footer"
 export const dynamic = "force-dynamic"
 
 export default async function BlogPage() {
+  const { t, intlLocale } = await getServerT()
   let articles: Awaited<ReturnType<typeof db.article.findMany>> = []
   try {
     articles = await db.article.findMany({
@@ -23,17 +25,17 @@ export default async function BlogPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-[#D4A843]/10 text-[#D4A843] text-xs font-bold px-3 py-1.5 rounded-full mb-4">
-              <Newspaper className="h-3.5 w-3.5" /> Blog
+              <Newspaper className="h-3.5 w-3.5" /> {t("Blog")}
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1B3A5C] dark:text-white mb-3">Actualités & conseils</h1>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1B3A5C] dark:text-white mb-3">{t("Actualités & conseils")}</h1>
             <p className="text-[#1B3A5C]/60 dark:text-white/50 max-w-xl mx-auto">
-              Astuces pour apprendre l&apos;allemand, actualités de l&apos;institut et retours d&apos;expérience.
+              {t("Astuces pour apprendre l'allemand, actualités de l'institut et retours d'expérience.")}
             </p>
           </div>
 
           {articles.length === 0 ? (
             <div className="bg-white dark:bg-[#132d4a] rounded-2xl p-12 text-center text-[#1B3A5C]/50 dark:text-white/40">
-              Aucun article publié pour le moment.
+              {t("Aucun article publié pour le moment.")}
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -41,15 +43,15 @@ export default async function BlogPage() {
                 <Link key={a.id} href={`/blog/${a.slug}`} className="bg-white dark:bg-[#132d4a] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
                   {a.coverImage && (
                     <div className="relative h-40 overflow-hidden">
-                      <Image src={a.coverImage} alt={a.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <Image src={a.coverImage} alt={t(a.title)} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                   )}
                   <div className="p-5">
                     <p className="flex items-center gap-1.5 text-[11px] text-[#1B3A5C]/40 dark:text-white/30 mb-2">
-                      <Calendar className="h-3 w-3" />{new Date(a.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                      <Calendar className="h-3 w-3" />{new Date(a.createdAt).toLocaleDateString(intlLocale, { day: "numeric", month: "long", year: "numeric" })}
                     </p>
-                    <h2 className="font-bold text-[#1B3A5C] dark:text-white mb-2 group-hover:text-[#D4A843] transition-colors">{a.title}</h2>
-                    <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 line-clamp-3">{a.excerpt}</p>
+                    <h2 className="font-bold text-[#1B3A5C] dark:text-white mb-2 group-hover:text-[#D4A843] transition-colors">{t(a.title)}</h2>
+                    <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 line-clamp-3">{t(a.excerpt)}</p>
                   </div>
                 </Link>
               ))}

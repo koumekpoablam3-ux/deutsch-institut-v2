@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useSyncExternalStore, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -8,6 +9,7 @@ import { Menu, X, Sun, Moon, GraduationCap, User, LogOut } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useSession, signOut } from "next-auth/react"
 import NotificationBell from "@/components/NotificationBell"
+import LanguageSwitcher from "@/components/LanguageSwitcher"
 
 const emptySub = () => () => {}
 
@@ -22,6 +24,7 @@ const navLinks = [
 ]
 
 export default function Header() {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const scrolled = useSyncExternalStore(
@@ -46,8 +49,8 @@ export default function Header() {
               <GraduationCap className="h-5 w-5 text-[#D4A843]" />
             </div>
             <div className="hidden sm:block">
-              <p className="font-bold text-sm text-[#1B3A5C] dark:text-white leading-tight">Deutsch-Institut</p>
-              <p className="text-[10px] text-[#D4A843]">Deutsch Für Alle</p>
+              <p className="font-bold text-sm text-[#1B3A5C] dark:text-white leading-tight">{t("Deutsch-Institut")}</p>
+              <p className="text-[10px] text-[#D4A843]">{t("Deutsch Für Alle")}</p>
             </div>
           </Link>
 
@@ -55,11 +58,12 @@ export default function Header() {
             {navLinks.map((link) => (
               <Link key={link.href + link.label} href={link.href}
                 className={"px-3 py-2 rounded-lg text-sm font-medium transition-colors " + (isActive(link.href) ? "text-[#D4A843] font-bold" : "text-[#1B3A5C]/70 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white hover:bg-[#1B3A5C]/5")}
-              >{link.label}</Link>
+              >{t(link.label)}</Link>
             ))}
           </nav>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             {mounted && (
               <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="text-[#1B3A5C]/60 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white transition-colors">
                 {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -69,18 +73,18 @@ export default function Header() {
               <>
                 <NotificationBell />
                 {(session.user as { role?: string }).role === "admin" && (
-                  <Link href="/admin" className="hidden md:block text-sm font-semibold text-[#D4A843] hover:text-[#C49A3A]">Admin</Link>
+                  <Link href="/admin" className="hidden md:block text-sm font-semibold text-[#D4A843] hover:text-[#C49A3A]">{t("Admin")}</Link>
                 )}
                 <Link href="/dashboard" className="hidden md:flex items-center gap-2 text-sm font-medium text-[#1B3A5C]/70 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white">
                   <User className="h-4 w-4" />
                   <span className="max-w-[100px] truncate">{session.user.name}</span>
                 </Link>
-                <button onClick={() => signOut({ callbackUrl: "/" })} className="hidden md:block text-sm font-medium text-[#1B3A5C]/70 dark:text-white/60 hover:text-red-500 transition-colors" title="Se déconnecter">
+                <button onClick={() => signOut({ callbackUrl: "/" })} className="hidden md:block text-sm font-medium text-[#1B3A5C]/70 dark:text-white/60 hover:text-red-500 transition-colors" title={t("Se déconnecter")}>
                   <LogOut className="h-4 w-4" />
                 </button>
               </>
             ) : (
-              <Link href="/login" className="hidden md:block text-sm font-medium text-[#1B3A5C]/70 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white">Se connecter</Link>
+              <Link href="/login" className="hidden md:block text-sm font-medium text-[#1B3A5C]/70 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white">{t("Se connecter")}</Link>
             )}
             <button className="lg:hidden text-[#1B3A5C] dark:text-white" onClick={() => setOpen(!open)}>
               {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -92,21 +96,22 @@ export default function Header() {
         {open && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="lg:hidden bg-white dark:bg-[#0a1628] border-t border-[#1B3A5C]/10">
             <div className="px-4 py-3 space-y-1">
+              <div className="px-1 pb-2"><LanguageSwitcher variant="wide" /></div>
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setOpen(false)}
                   className={"block px-4 py-2.5 rounded-lg text-sm font-medium " + (isActive(link.href) ? "text-[#D4A843] bg-[#D4A843]/10" : "text-[#1B3A5C]/70 dark:text-white/60")}
-                >{link.label}</Link>
+                >{t(link.label)}</Link>
               ))}
               {status === "authenticated" && session?.user ? (
                 <>
                   {(session.user as { role?: string }).role === "admin" && (
-                    <Link href="/admin" onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm font-semibold text-[#D4A843]">Panneau Admin</Link>
+                    <Link href="/admin" onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm font-semibold text-[#D4A843]">{t("Panneau Admin")}</Link>
                   )}
-                  <Link href="/dashboard" onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-[#D4A843]">Tableau de bord ({session.user.name?.split(" ")[0]})</Link>
-                  <button onClick={() => signOut({ callbackUrl: "/" })} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-500">Se déconnecter</button>
+                  <Link href="/dashboard" onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-[#D4A843]">{t("Tableau de bord (")}{session.user.name?.split(" ")[0]})</Link>
+                  <button onClick={() => signOut({ callbackUrl: "/" })} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-red-500">{t("Se déconnecter")}</button>
                 </>
               ) : (
-                <Link href="/login" onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-[#D4A843]">Se connecter</Link>
+                <Link href="/login" onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm font-medium text-[#D4A843]">{t("Se connecter")}</Link>
               )}
             </div>
           </motion.div>

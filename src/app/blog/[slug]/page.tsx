@@ -1,3 +1,4 @@
+import { getServerT } from "@/i18n/server"
 import { db } from "@/lib/db"
 import { notFound } from "next/navigation"
 import Image from "next/image"
@@ -65,6 +66,7 @@ function renderContent(content: string): React.ReactNode[] {
 }
 
 export default async function ArticlePage({ params }: PageProps) {
+  const { t, intlLocale } = await getServerT()
   const { slug } = await params
 
   let article
@@ -87,24 +89,24 @@ export default async function ArticlePage({ params }: PageProps) {
       <div className="min-h-screen pt-16 bg-[#f8f9fb] dark:bg-[#050d1a]">
         {article.coverImage && (
           <div className="relative h-64 sm:h-80 overflow-hidden">
-            <Image src={article.coverImage} alt={article.title} fill className="object-cover" />
+            <Image src={article.coverImage} alt={t(article.title)} fill className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           </div>
         )}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Link href="/blog" className="inline-flex items-center gap-2 text-[#1B3A5C]/60 dark:text-white/50 hover:text-[#1B3A5C] dark:hover:text-white text-sm mb-6">
-            <ArrowLeft className="h-4 w-4" /> Retour au blog
+            <ArrowLeft className="h-4 w-4" /> {t("Retour au blog")}
           </Link>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1B3A5C] dark:text-white mb-4">{article.title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1B3A5C] dark:text-white mb-4">{t(article.title)}</h1>
 
           <div className="flex items-center gap-4 text-xs text-[#1B3A5C]/40 dark:text-white/30 mb-8 pb-8 border-b border-[#1B3A5C]/10 dark:border-white/10">
             <span className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" />{article.author.name}</span>
-            <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{new Date(article.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</span>
+            <span className="flex items-center gap-1.5"><Calendar className="h-3.5 w-3.5" />{new Date(article.createdAt).toLocaleDateString(intlLocale, { day: "numeric", month: "long", year: "numeric" })}</span>
           </div>
 
           <div className="prose prose-sm max-w-none">
-            {renderContent(article.content)}
+            {renderContent(t(article.content))}
           </div>
         </div>
       </div>

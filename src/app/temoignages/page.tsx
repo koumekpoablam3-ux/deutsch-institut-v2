@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { Star, Quote, BookOpen, Loader2, MessageSquareOff } from "lucide-react"
@@ -25,6 +26,7 @@ const stats = [
 ]
 
 export default function TemoignagesPage() {
+  const { t } = useI18n()
   const [reviews, setReviews] = useState<ReviewData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -69,9 +71,9 @@ export default function TemoignagesPage() {
           <div className="absolute bottom-10 right-20 w-72 h-72 rounded-full bg-[#D4A843]/10" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <span className="inline-block bg-[#D4A843]/20 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">Témoignages</span>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-3">Ils nous font confiance</h1>
-              <p className="text-white/70 max-w-xl text-lg">Découvrez les parcours de nos étudiants qui ont réussi leur projet en Allemagne.</p>
+              <span className="inline-block bg-[#D4A843]/20 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">{t("Témoignages")}</span>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-3">{t("Ils nous font confiance")}</h1>
+              <p className="text-white/70 max-w-xl text-lg">{t("Découvrez les parcours de nos étudiants qui ont réussi leur projet en Allemagne.")}</p>
             </motion.div>
           </div>
         </div>
@@ -83,7 +85,7 @@ export default function TemoignagesPage() {
           {stats.map((s, i) => (
             <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="text-center">
               <p className="text-3xl sm:text-4xl font-extrabold text-[#D4A843]">{s.value}</p>
-              <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 mt-2 font-medium">{s.label}</p>
+              <p className="text-sm text-[#1B3A5C]/60 dark:text-white/50 mt-2 font-medium">{t(s.label)}</p>
             </motion.div>
           ))}
         </div>
@@ -119,18 +121,18 @@ export default function TemoignagesPage() {
           ) : error ? (
             <div className="text-center py-16">
               <MessageSquareOff className="h-12 w-12 text-[#1B3A5C]/30 mx-auto mb-4" />
-              <p className="text-[#1B3A5C]/60 dark:text-white/50 mb-6">Impossible de charger les témoignages pour le moment.</p>
+              <p className="text-[#1B3A5C]/60 dark:text-white/50 mb-6">{t("Impossible de charger les témoignages pour le moment.")}</p>
               <Button variant="outline" onClick={fetchReviews} className="border-[#1B3A5C] text-[#1B3A5C] dark:border-white/30 dark:text-white">
-                Réessayer
+                {t("Réessayer")}
               </Button>
             </div>
           ) : reviews.length === 0 ? (
             <div className="text-center py-16">
               <MessageSquareOff className="h-12 w-12 text-[#1B3A5C]/30 mx-auto mb-4" />
-              <p className="text-[#1B3A5C]/60 dark:text-white/50 mb-2">Aucun témoignage pour le moment.</p>
-              <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30 mb-6">Soyez le premier à partager votre expérience !</p>
+              <p className="text-[#1B3A5C]/60 dark:text-white/50 mb-2">{t("Aucun témoignage pour le moment.")}</p>
+              <p className="text-sm text-[#1B3A5C]/40 dark:text-white/30 mb-6">{t("Soyez le premier à partager votre expérience !")}</p>
               <Link href="/contact">
-                <Button className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">Nous contacter</Button>
+                <Button className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">{t("Nous contacter")}</Button>
               </Link>
             </div>
           ) : (
@@ -144,7 +146,7 @@ export default function TemoignagesPage() {
                     ))}
                   </div>
                   <p className="text-[#1B3A5C]/70 dark:text-white/60 leading-relaxed mb-6 text-sm italic">
-                    {review.comment || "Aucun commentaire laissé."}
+                    {review.comment || t("Aucun commentaire laissé.")}
                   </p>
                   <div className="border-t border-[#1B3A5C]/5 pt-5">
                     <div className="flex items-center justify-between mb-3">
@@ -154,7 +156,7 @@ export default function TemoignagesPage() {
                         </div>
                         <div>
                           <p className="font-semibold text-sm text-[#1B3A5C] dark:text-white">{review.user.name}</p>
-                          <p className="text-xs text-[#D4A843] font-medium">{review.course.level} - Étudiant</p>
+                          <p className="text-xs text-[#D4A843] font-medium">{review.course.level} {t("- Étudiant")}</p>
                         </div>
                       </div>
                     </div>
@@ -173,9 +175,9 @@ export default function TemoignagesPage() {
       {/* CTA */}
       <section className="py-16 bg-gradient-to-br from-[#1B3A5C] to-[#0f2a45]">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-extrabold text-white mb-4">Rejoignez-les !</h2>
-          <p className="text-white/60 mb-8">Commencez votre formation et écrivez votre propre réussite.</p>
-          <Link href="/contact"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">S'inscrire maintenant</Button></Link>
+          <h2 className="text-3xl font-extrabold text-white mb-4">{t("Rejoignez-les !")}</h2>
+          <p className="text-white/60 mb-8">{t("Commencez votre formation et écrivez votre propre réussite.")}</p>
+          <Link href="/contact"><Button size="lg" className="bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold px-8">{t("S'inscrire maintenant")}</Button></Link>
         </div>
       </section>
 

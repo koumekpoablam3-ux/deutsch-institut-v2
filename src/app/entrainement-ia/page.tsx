@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Send, Bot, User, Loader2, Trash2, Sparkles, ArrowLeft } from "lucide-react"
@@ -19,6 +20,7 @@ interface ChatMsg {
 }
 
 export default function AIPage() {
+  const { t } = useI18n()
   const router = useRouter()
   const [messages, setMessages] = useState<ChatMsg[]>([])
   const [input, setInput] = useState("")
@@ -68,23 +70,23 @@ export default function AIPage() {
         setMessages(prev => prev.filter(m => m.id !== tempId))
       }
     } catch {
-      toast.error("Erreur de connexion")
+      toast.error(t("Erreur de connexion"))
       setMessages(prev => prev.filter(m => m.id !== tempId))
     } finally { setLoading(false) }
   }
 
   const clearHistory = async () => {
-    if (!confirm("Effacer tout l\'historique de conversation ?")) return
+    if (!confirm(t("Effacer tout l'historique de conversation ?"))) return
     try {
       const res = await fetch("/api/chat", { method: "DELETE" })
       if (res.ok) {
         setMessages([])
-        toast.success("Historique effacé")
+        toast.success(t("Historique effacé"))
       } else {
-        toast.error("Impossible d\'effacer l\'historique")
+        toast.error(t("Impossible d'effacer l'historique"))
       }
     } catch {
-      toast.error("Erreur de connexion")
+      toast.error(t("Erreur de connexion"))
     }
   }
 
@@ -107,8 +109,8 @@ export default function AIPage() {
                 <Bot className="h-5 w-5 text-[#D4A843]" />
               </div>
               <div>
-                <p className="font-bold text-sm text-[#1B3A5C] dark:text-white">DeutschTutor IA</p>
-                <p className="text-[10px] text-green-600 font-medium">En ligne · Niveau {niveau}</p>
+                <p className="font-bold text-sm text-[#1B3A5C] dark:text-white">{t("DeutschTutor IA")}</p>
+                <p className="text-[10px] text-green-600 font-medium">{t("En ligne · Niveau")}{" "}{niveau}</p>
               </div>
             </div>
             <Button variant="ghost" size="sm" onClick={clearHistory} className="text-[#1B3A5C]/40 hover:text-red-500"><Trash2 className="h-4 w-4" /></Button>
@@ -121,8 +123,8 @@ export default function AIPage() {
             {messages.length === 0 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
                 <Sparkles className="h-12 w-12 text-[#D4A843] mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-[#1B3A5C] dark:text-white mb-2">Commencez à pratiquer !</h2>
-                <p className="text-[#1B3A5C]/50 dark:text-white/40 max-w-md mx-auto text-sm mb-6">Écrivez quelque chose en allemand et je vous aiderai avec la grammaire, le vocabulaire et la prononciation.</p>
+                <h2 className="text-xl font-bold text-[#1B3A5C] dark:text-white mb-2">{t("Commencez à pratiquer !")}</h2>
+                <p className="text-[#1B3A5C]/50 dark:text-white/40 max-w-md mx-auto text-sm mb-6">{t("Écrivez quelque chose en allemand et je vous aiderai avec la grammaire, le vocabulaire et la prononciation.")}</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {["Guten Tag, wie geht es Ihnen?", "Ich möchte Deutsch lernen.", "Können Sie mir helfen?"].map((s) => (
                     <button key={s} onClick={() => setInput(s)} className="text-xs bg-[#f8f9fb] dark:bg-[#132d4a] text-[#1B3A5C]/60 dark:text-white/50 px-3 py-1.5 rounded-full hover:bg-[#D4A843]/10 hover:text-[#D4A843] transition-colors">{s}</button>
@@ -140,7 +142,7 @@ export default function AIPage() {
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                     {msg.correction && (
                       <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                        <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">Correction :</p>
+                        <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">{t("Correction :")}</p>
                         <p className="text-sm font-medium text-red-700 dark:text-red-300">{msg.correction}</p>
                       </div>
                     )}
@@ -166,7 +168,7 @@ export default function AIPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
-              placeholder="Écrivez en allemand..."
+              placeholder={t("Écrivez en allemand...")}
               disabled={loading}
               className="flex-1 h-12 rounded-xl border border-[#1B3A5C]/20 bg-[#f8f9fb] dark:bg-[#132d4a] text-[#1B3A5C] dark:text-white px-4 text-sm focus:outline-none focus:border-[#D4A843] disabled:opacity-50"
             />

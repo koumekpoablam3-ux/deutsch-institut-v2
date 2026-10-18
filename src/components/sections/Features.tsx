@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { Award, Plane, Home, Users, BookOpen, Globe, Star, GraduationCap, type LucideIcon } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useI18n } from "@/i18n/I18nProvider"
 import type { FeatureIcon, FeaturesSettings } from "@/lib/site-content"
 
 const ICONS: Record<FeatureIcon, LucideIcon> = {
@@ -29,6 +30,7 @@ const cardVariants = {
 }
 
 export default function Features({ content }: { content: FeaturesSettings }) {
+  const { t } = useI18n()
   if (content.items.length === 0) return null
   return (
     <section id="features" className="py-20 lg:py-28 bg-[#f8f9fb] dark:bg-[#0a1628]">
@@ -41,14 +43,14 @@ export default function Features({ content }: { content: FeaturesSettings }) {
           className="text-center mb-16"
         >
           <span className="inline-block bg-[#D4A843]/15 text-[#D4A843] font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
-            {content.eyebrow}
+            {t(content.eyebrow)}
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1B3A5C] dark:text-white mb-4">
-            {content.title}
+            {t(content.title)}
           </h2>
           {content.subtitle && (
             <p className="text-[#1B3A5C]/60 dark:text-white/50 max-w-2xl mx-auto text-lg">
-              {content.subtitle}
+              {t(content.subtitle)}
             </p>
           )}
         </motion.div>
@@ -66,7 +68,7 @@ export default function Features({ content }: { content: FeaturesSettings }) {
             <motion.div key={feature.title + i} variants={cardVariants}>
               <Card className="group h-full border-0 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-[#132d4a] hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 relative overflow-hidden">
-                  <Image src={feature.image} alt={feature.title} fill unoptimized={!feature.image.startsWith("/images/")} className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <Image src={feature.image} alt={t(feature.title)} fill unoptimized={!feature.image.startsWith("/images/")} className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   <div className={`absolute top-4 left-4 w-12 h-12 rounded-xl bg-gradient-to-br ${COLORS[i % COLORS.length]} flex items-center justify-center shadow-lg`}>
                     <Icon className="h-6 w-6 text-white" />
@@ -74,10 +76,10 @@ export default function Features({ content }: { content: FeaturesSettings }) {
                 </div>
                 <CardContent className="pt-6 pb-6 px-6">
                   <h3 className="font-bold text-lg text-[#1B3A5C] dark:text-white mb-3">
-                    {feature.title}
+                    {t(feature.title)}
                   </h3>
                   <p className="text-[#1B3A5C]/60 dark:text-white/50 text-sm leading-relaxed">
-                    {feature.description}
+                    {t(feature.description)}
                   </p>
                 </CardContent>
               </Card>

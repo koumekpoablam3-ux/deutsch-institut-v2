@@ -1,5 +1,6 @@
 "use client"
 
+import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useRef, useEffect } from "react"
 import { MessageCircle, X, Send, Loader2, GraduationCap } from "lucide-react"
 
@@ -9,9 +10,10 @@ interface Msg {
 }
 
 export default function ChatbotWidget() {
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Bonjour ! 👋 Je suis l'assistant de Deutsch-Institut. Posez-moi vos questions sur nos cours, tarifs, niveaux ou l'inscription !" },
+    { role: "assistant", content: t("Bonjour ! 👋 Je suis l'assistant de Deutsch-Institut. Posez-moi vos questions sur nos cours, tarifs, niveaux ou l'inscription !") },
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
@@ -37,9 +39,9 @@ export default function ChatbotWidget() {
         body: JSON.stringify({ message: text }),
       })
       const data = await res.json()
-      setMessages((prev) => [...prev, { role: "assistant", content: data.data?.reply || "Désolé, je n'ai pas compris votre question." }])
+      setMessages((prev) => [...prev, { role: "assistant", content: data.data?.reply || t("Désolé, je n'ai pas compris votre question.") }])
     } catch {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Erreur de connexion. Veuillez réessayer." }])
+      setMessages((prev) => [...prev, { role: "assistant", content: t("Erreur de connexion. Veuillez réessayer.") }])
     } finally {
       setLoading(false)
     }
@@ -54,8 +56,8 @@ export default function ChatbotWidget() {
               <GraduationCap className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-bold text-sm">Assistant Deutsch-Institut</p>
-              <p className="text-white/50 text-[11px]">En ligne</p>
+              <p className="text-white font-bold text-sm">{t("Assistant Deutsch-Institut")}</p>
+              <p className="text-white/50 text-[11px]">{t("En ligne")}</p>
             </div>
             <button onClick={() => setOpen(false)} className="text-white/60 hover:text-white"><X className="h-5 w-5" /></button>
           </div>
@@ -82,7 +84,7 @@ export default function ChatbotWidget() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Écrivez votre question..."
+              placeholder={t("Écrivez votre question...")}
               className="flex-1 h-10 rounded-full px-4 text-sm bg-[#f8f9fb] dark:bg-[#0a1628] text-[#1B3A5C] dark:text-white border border-[#1B3A5C]/10 dark:border-white/10 focus:outline-none focus:border-[#D4A843]"
             />
             <button type="submit" disabled={loading || !input.trim()} className="w-10 h-10 rounded-full bg-[#D4A843] hover:bg-[#C49A3A] disabled:opacity-50 flex items-center justify-center shrink-0">
@@ -95,7 +97,7 @@ export default function ChatbotWidget() {
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-14 h-14 rounded-full bg-[#D4A843] hover:bg-[#C49A3A] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
-        title="Discuter avec l'assistant"
+        title={t("Discuter avec l'assistant")}
       >
         {open ? <X className="h-6 w-6 text-white" /> : <MessageCircle className="h-6 w-6 text-white" />}
       </button>
