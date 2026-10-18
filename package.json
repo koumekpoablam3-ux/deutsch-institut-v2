@@ -10,6 +10,7 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
+    "db:fix-levels": "tsx prisma/fix-levels.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {

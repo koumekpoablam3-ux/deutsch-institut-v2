@@ -1,6 +1,7 @@
 "use client"
 
 import { useI18n } from "@/i18n/I18nProvider"
+import { normalizeLevel } from "@/lib/levels"
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
@@ -61,7 +62,7 @@ export default function ProfilePage() {
         setProfile(user)
         setName(user.name)
         setTelephone(user.telephone || "")
-        setNiveau(user.niveau)
+        setNiveau(normalizeLevel(user.niveau))
       }
     } catch { /* noop */ }
     finally { setLoading(false) }
@@ -114,12 +115,12 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-[#f8f9fb] dark:bg-[#050d1a] flex">
       {open && <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setOpen(false)} />}
-      <div className={"fixed top-0 left-0 h-full w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 " + (open ? "translate-x-0" : "-translate-x-full")}>
+      <div className={"fixed top-0 left-0 h-dvh w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 flex flex-col " + (open ? "translate-x-0" : "-translate-x-full")}>
         <div className="p-5 flex items-center gap-2.5 border-b border-white/10">
           <div className="w-9 h-9 rounded-lg bg-[#D4A843] flex items-center justify-center"><GraduationCap className="h-5 w-5 text-white" /></div>
-          <div><p className="font-bold text-sm">{t("Deutsch-Institut")}</p><p className="text-[10px] text-white/50">{profile?.niveau || "A1"}</p></div>
+          <div><p className="font-bold text-sm">{t("Deutsch-Institut")}</p><p className="text-[10px] text-white/50">{normalizeLevel(profile?.niveau)}</p></div>
         </div>
-        <nav className="p-3 space-y-1">
+        <nav className="flex-1 min-h-0 overflow-y-auto p-3 space-y-1">
           {[
             { icon: LayoutDashboard, label: "Tableau de bord", href: "/dashboard" },
             { icon: BookOpen, label: "Mes cours", href: "/cours" },
@@ -132,7 +133,7 @@ export default function ProfilePage() {
             </a>
           ))}
         </nav>
-        <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
+        <div className="shrink-0 p-3 border-t border-white/10">
           <div className="px-3 py-2 mb-2"><p className="text-sm font-medium text-white/80">{profile?.name || ""}</p><p className="text-[10px] text-white/40">{profile?.email || ""}</p></div>
           <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 w-full"><LogOut className="h-5 w-5" />{t("Se déconnecter")}</button>
         </div>

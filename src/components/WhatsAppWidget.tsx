@@ -21,7 +21,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   )
 }
 
-function WhatsAppWidgetInner() {
+function WhatsAppWidgetInner({ side }: { side: "left" | "right" }) {
   const { t } = useI18n()
   // Numéro modifiable dans l'admin (Coordonnées)
   const { whatsappNumber: WHATSAPP_NUMBER, whatsappDisplay: WHATSAPP_DISPLAY } = useContactSettings()
@@ -34,7 +34,7 @@ function WhatsAppWidgetInner() {
   }
 
   return (
-    <div className="fixed bottom-5 left-5 z-50">
+    <div className={"fixed z-50 " + (side === "right" ? "bottom-24 right-5 flex flex-col items-end" : "bottom-5 left-5")}>
       {open && (
         <div className="mb-3 w-[calc(100vw-2.5rem)] max-w-[320px] bg-white dark:bg-[#132d4a] rounded-2xl shadow-2xl overflow-hidden border border-[#1B3A5C]/10 dark:border-white/10">
           <div className="bg-emerald-500 p-4 flex items-center gap-3">
@@ -101,5 +101,7 @@ function WhatsAppWidgetInner() {
 export default function WhatsAppWidget() {
   const pathname = usePathname()
   if (pathname?.startsWith("/admin")) return null
-  return <WhatsAppWidgetInner />
+  // Dashboard, profil et espace de cours ont un menu à gauche : le bouton passe à droite pour ne rien cacher
+  const side = pathname?.startsWith("/dashboard") || pathname?.includes("/apprendre") ? "right" : "left"
+  return <WhatsAppWidgetInner side={side} />
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useI18n } from "@/i18n/I18nProvider"
+import { LEVELS, normalizeLevel } from "@/lib/levels"
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
@@ -35,7 +36,7 @@ interface Enrollment {
   course: Course;
 }
 
-const levelOrder = ["A1", "A2", "B1", "B2"]
+const levelOrder = LEVELS as readonly string[]
 const levelNames: Record<string, string> = { A1: "Débutant", A2: "Élémentaire", B1: "Intermédiaire", B2: "Interm. Sup." }
 
 const gradientColors: Record<string, string> = { A1: "from-[#16a34a] to-[#4ade80]", A2: "from-[#D4A843] to-[#E8C76A]", B1: "from-[#1B3A5C] to-[#3b82f6]", B2: "from-[#7c3aed] to-[#a78bfa]" }
@@ -66,11 +67,16 @@ export default function DashboardPage() {
     if (status === "authenticated") { fetchEnrollments() }
   }, [status, router, fetchEnrollments])
 
+  // Niveau de l'étudiant ramené à A1-B2 (les anciens profils C1/C2 comptent comme B2)
+  const userLevel = normalizeLevel(user?.niveau)
+
   const getLevelStatus = (level: string) => {
-    const enr = enrollments.find(e => e.course.level === level)
+    const enr = enrollments.find(e => normalizeLevel(e.course.level) === level)
     if (enr && enr.progress >= 100) return { status: "done", progress: 100 }
     if (enr && enr.progress > 0) return { status: "active", progress: enr.progress }
-    if (user?.niveau === level) return { status: "current", progress: 0 }
+    if (userLevel === level) return { status: "current", progress: 0 }
+    // Les niveaux inférieurs à celui de l'étudiant sont considérés comme acquis
+    if (levelOrder.indexOf(level) < levelOrder.indexOf(userLevel)) return { status: "done", progress: 100 }
     return { status: "locked", progress: 0 }
   }
 
@@ -136,19 +142,19 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#f8f9fb] dark:bg-[#050d1a] flex">
       {open && <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setOpen(false)} />}
-      <div className={"fixed top-0 left-0 h-full w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 " + (open ? "translate-x-0" : "-translate-x-full")}>
+      <div className={"fixed top-0 left-0 h-dvh w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 flex flex-col " + (open ? "translate-x-0" : "-translate-x-full")}>
         <div className="p-5 flex items-center gap-2.5 border-b border-white/10">
           <div className="w-9 h-9 rounded-lg bg-[#D4A843] flex items-center justify-center"><GraduationCap className="h-5 w-5 text-white" /></div>
-          <div><p className="font-bold text-sm">{t("Deutsch-Institut")}</p><p className="text-[10px] text-white/50">{user?.niveau || "A1"}</p></div>
+          <div><p className="font-bold text-sm">{t("Deutsch-Institut")}</p><p className="text-[10px] text-white/50">{userLevel}</p></div>
         </div>
-        <nav className="p-3 space-y-1">
+        <nav className="flex-1 min-h-0 overflow-y-auto p-3 space-y-1">
           {[{ icon: LayoutDashboard, label: "Tableau de bord", href: "/dashboard", active: true }, { icon: BookOpen, label: "Mes cours", href: "/cours" }, { icon: Library, label: "Catalogue", href: "/cours" }, { icon: RefreshCw, label: "Révision IA", href: "/entrainement-ia" }, { icon: User, label: "Mon profil", href: "/dashboard/profil" }].map((item) => (
             <a key={item.label} href={item.href} className={"flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm " + (item.active ? "bg-[#D4A843]/20 text-[#D4A843] font-semibold" : "text-white/60 hover:text-white hover:bg-white/5")}>
               <item.icon className="h-5 w-5" />{t(item.label)}
             </a>
           ))}
         </nav>
-        <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
+        <div className="shrink-0 p-3 border-t border-white/10">
           <div className="px-3 py-2 mb-2"><p className="text-sm font-medium text-white/80">{user?.name || ""}</p><p className="text-[10px] text-white/40">{user?.email || ""}</p></div>
           <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 w-full"><LogOut className="h-5 w-5" />{t("Se déconnecter")}</button>
         </div>
@@ -160,8 +166,8 @@ export default function DashboardPage() {
             <h1 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{t("Tableau de bord")}</h1>
           </div>
           <div className="bg-gradient-to-r from-[#1B3A5C] to-[#0f2a45] rounded-2xl p-6 text-white mb-8 flex items-center justify-between flex-wrap gap-4">
-            <div><h2 className="text-2xl font-bold mb-1">{t("Bienvenue,")}{" "}{user?.name?.split(" ")[0] || t("Étudiant")} !</h2><p className="text-white/70">{t("Continuez votre apprentissage. Niveau actuel :")}{" "}{user?.niveau || "A1"}</p></div>
-            <div className="bg-[#D4A843] text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" />{streakDays} {t("JOURS DE SÉRIE")}</div>
+            <div><h2 className="text-2xl font-bold mb-1">{t("Bienvenue,")}{" "}{user?.name?.split(" ")[0] || t("Étudiant")} !</h2><p className="text-white/70">{t("Continuez votre apprentissage. Niveau actuel :")}{" "}{userLevel}</p></div>
+            <div className="bg-[#D4A843] text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" />{streakDays} {streakDays > 1 ? t("JOURS DE SÉRIE") : t("JOUR DE SÉRIE")}</div>
           </div>
           <div className="bg-white dark:bg-[#132d4a] rounded-2xl p-6 mb-8 shadow-sm">
             <h3 className="font-bold text-[#1B3A5C] dark:text-white mb-6">{t("Votre chemin vers la maîtrise")}</h3>
@@ -239,14 +245,14 @@ export default function DashboardPage() {
                     <GraduationCap className="h-5 w-5 text-[#1B3A5C] dark:text-white" />
                     <span className="text-sm font-medium text-[#1B3A5C] dark:text-white">{t("Niveau actuel")}</span>
                   </div>
-                  <span className="font-bold text-[#1B3A5C] dark:text-white">{user?.niveau || "A1"}</span>
+                  <span className="font-bold text-[#1B3A5C] dark:text-white">{userLevel}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-[#f8f9fb] dark:bg-[#0a1628]">
                   <div className="flex items-center gap-3">
                     <Zap className="h-5 w-5 text-[#D4A843]" />
                     <span className="text-sm font-medium text-[#1B3A5C] dark:text-white">{t("Série actuelle")}</span>
                   </div>
-                  <span className="font-bold text-[#D4A843]">{streakDays} {t("jour")}{streakDays > 1 ? "s" : ""}</span>
+                  <span className="font-bold text-[#D4A843]">{streakDays} {streakDays > 1 ? t("jours") : t("jour")}</span>
                 </div>
               </div>
             </div>

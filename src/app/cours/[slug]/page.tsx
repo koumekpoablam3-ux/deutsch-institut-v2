@@ -56,7 +56,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
               </div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white mb-2">{t(course.title)}</h1>
               <div className="flex items-center gap-4 text-white/70 text-sm">
-                <span className="flex items-center gap-1.5"><BookOpen className="h-4 w-4" />{course.lessons} {t("leçons")}</span>
+                <span className="flex items-center gap-1.5"><BookOpen className="h-4 w-4" />{course.lessons} {course.lessons > 1 ? t("leçons") : t("leçon")}</span>
                 <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{t(course.duration)}</span>
                 <span className="text-[#D4A843] font-bold text-lg">{course.price}</span>
               </div>
@@ -104,7 +104,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
                 <div className="mt-6 space-y-3 pt-6 border-t border-[#1B3A5C]/10">
                   <div className="flex items-center gap-3 text-sm text-[#1B3A5C]/60 dark:text-white/50">
                     <BookOpen className="h-4 w-4 text-[#D4A843]" />
-                    <span>{course.lessons} {t("leçons")}</span>
+                    <span>{course.lessons} {course.lessons > 1 ? t("leçons") : t("leçon")}</span>
                   </div>
                   <div className="flex items-center gap-3 text-sm text-[#1B3A5C]/60 dark:text-white/50">
                     <Clock className="h-4 w-4 text-[#D4A843]" />

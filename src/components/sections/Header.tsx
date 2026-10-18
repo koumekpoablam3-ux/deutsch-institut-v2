@@ -63,7 +63,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <LanguageSwitcher />
+            <div className="hidden lg:block"><LanguageSwitcher /></div>
             {mounted && (
               <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="text-[#1B3A5C]/60 dark:text-white/60 hover:text-[#1B3A5C] dark:hover:text-white transition-colors">
                 {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}

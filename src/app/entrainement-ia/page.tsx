@@ -1,6 +1,7 @@
 "use client"
 
 import { useI18n } from "@/i18n/I18nProvider"
+import { normalizeLevel } from "@/lib/levels"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Send, Bot, User, Loader2, Trash2, Sparkles, ArrowLeft } from "lucide-react"
@@ -35,7 +36,7 @@ export default function AIPage() {
       const session = await sessionRes.json()
       if (!session?.user) { router.push("/login"); return }
       const u = session.user as { niveau?: string }
-      setNiveau(u.niveau || "A1")
+      setNiveau(normalizeLevel(u.niveau))
 
       const chatRes = await fetch("/api/chat")
       if (chatRes.ok) {

@@ -126,7 +126,7 @@ export default function CoursPage() {
                   <div className="p-5">
                     <Link href={"/cours/" + c.slug}><h3 className="font-bold text-[#1B3A5C] dark:text-white mb-3 text-sm leading-snug hover:text-[#D4A843] transition-colors">{t(c.title)}</h3></Link>
                     <div className="flex items-center gap-3 text-xs text-[#1B3A5C]/50 dark:text-white/40 mb-4">
-                      <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{c.lessons} {t("leçons")}</span>
+                      <span className="flex items-center gap-1"><BookOpen className="h-3 w-3" />{c.lessons} {c.lessons > 1 ? t("leçons") : t("leçon")}</span>
                       <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{c.duration}</span>
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-[#1B3A5C]/5">
