@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useI18n } from "@/i18n/I18nProvider"
 import { useState } from "react"
 import { X } from "lucide-react"
@@ -20,7 +21,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   )
 }
 
-export default function WhatsAppWidget() {
+function WhatsAppWidgetInner() {
   const { t } = useI18n()
   // Numéro modifiable dans l'admin (Coordonnées)
   const { whatsappNumber: WHATSAPP_NUMBER, whatsappDisplay: WHATSAPP_DISPLAY } = useContactSettings()
@@ -94,4 +95,11 @@ export default function WhatsAppWidget() {
       </button>
     </div>
   )
+}
+
+// Les boutons flottants (WhatsApp, assistant) ne s'affichent pas dans le panneau d'administration
+export default function WhatsAppWidget() {
+  const pathname = usePathname()
+  if (pathname?.startsWith("/admin")) return null
+  return <WhatsAppWidgetInner />
 }

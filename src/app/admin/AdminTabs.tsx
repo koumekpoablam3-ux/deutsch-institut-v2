@@ -5,20 +5,40 @@ import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, Credit
 
 export type AdminTab = "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "contact" | "traductions" | "medias"
 
-const tabs: { key: AdminTab; icon: typeof BookOpen; label: string }[] = [
-  { key: "cours", icon: BookOpen, label: "Cours" },
-  { key: "messages", icon: Mail, label: "Messages" },
-  { key: "utilisateurs", icon: UsersIcon, label: "Utilisateurs" },
-  { key: "paiements", icon: CreditCard, label: "Paiements" },
-  { key: "avis", icon: Star, label: "Avis" },
-  { key: "sessions", icon: Video, label: "Sessions live" },
-  { key: "blog", icon: Newspaper, label: "Blog" },
-  { key: "carrousel", icon: GalleryHorizontal, label: "Carrousel d'accueil" },
-  { key: "contenu", icon: PenLine, label: "Contenu du site" },
-  { key: "contact", icon: Phone, label: "Coordonnées & pied de page" },
-  { key: "traductions", icon: Languages, label: "Traductions" },
-  { key: "medias", icon: ImageIcon, label: "Médiathèque" },
+type TabItem = { key: AdminTab; icon: typeof BookOpen; label: string }
+
+// Le menu est regroupé par thème pour rester lisible malgré le nombre d'onglets
+const tabGroups: { title: string; items: TabItem[] }[] = [
+  {
+    title: "Gestion",
+    items: [
+      { key: "cours", icon: BookOpen, label: "Cours" },
+      { key: "utilisateurs", icon: UsersIcon, label: "Utilisateurs" },
+      { key: "paiements", icon: CreditCard, label: "Paiements" },
+      { key: "sessions", icon: Video, label: "Sessions live" },
+    ],
+  },
+  {
+    title: "Communication",
+    items: [
+      { key: "messages", icon: Mail, label: "Messages" },
+      { key: "avis", icon: Star, label: "Avis" },
+      { key: "blog", icon: Newspaper, label: "Blog" },
+    ],
+  },
+  {
+    title: "Site web",
+    items: [
+      { key: "carrousel", icon: GalleryHorizontal, label: "Carrousel" },
+      { key: "contenu", icon: PenLine, label: "Contenu du site" },
+      { key: "contact", icon: Phone, label: "Coordonnées" },
+      { key: "traductions", icon: Languages, label: "Traductions" },
+      { key: "medias", icon: ImageIcon, label: "Médiathèque" },
+    ],
+  },
 ]
+
+const tabs: TabItem[] = tabGroups.flatMap((g) => g.items)
 
 const tabTitles: Record<AdminTab, string> = {
   cours: "Gestion des cours",
@@ -46,27 +66,40 @@ export function AdminSidebar({ activeTab, onTabChange, open, onOpenChange }: Adm
   return (
     <>
       {open && <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => onOpenChange(false)} />}
-      <div className={"fixed top-0 left-0 h-full w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 " + (open ? "translate-x-0" : "-translate-x-full")}>
-        <div className="p-5 flex items-center gap-2.5 border-b border-white/10">
+      <div className={"fixed top-0 left-0 h-dvh w-64 bg-[#1B3A5C] text-white z-50 transition-transform lg:translate-x-0 flex flex-col " + (open ? "translate-x-0" : "-translate-x-full")}>
+        <div className="p-5 flex items-center gap-2.5 border-b border-white/10 shrink-0">
           <div className="w-9 h-9 rounded-lg bg-[#D4A843] flex items-center justify-center"><GraduationCap className="h-5 w-5 text-white" /></div>
           <div><p className="font-bold text-sm">Deutsch-Institut</p><p className="text-[10px] text-white/50">Panneau Admin</p></div>
         </div>
-        <nav className="p-3 space-y-1">
-          {tabs.map((item) => (
-            <button
-              key={item.key}
-              onClick={() => { onTabChange(item.key); onOpenChange(false) }}
-              className={"w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm " + (activeTab === item.key ? "bg-[#D4A843]/20 text-[#D4A843] font-semibold" : "text-white/60 hover:text-white hover:bg-white/5")}
-            >
-              <item.icon className="h-5 w-5" />{item.label}
-            </button>
+
+        {/* Menu : défile s'il dépasse la hauteur de l'écran */}
+        <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.2)_transparent]">
+          {tabGroups.map((group) => (
+            <div key={group.title}>
+              <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-white/35">{group.title}</p>
+              <div className="space-y-0.5">
+                {group.items.map((item) => (
+                  <button
+                    key={item.key}
+                    onClick={() => { onTabChange(item.key); onOpenChange(false) }}
+                    className={"w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-left " + (activeTab === item.key ? "bg-[#D4A843]/20 text-[#D4A843] font-semibold" : "text-white/60 hover:text-white hover:bg-white/5")}
+                  >
+                    <item.icon className="h-[18px] w-[18px] shrink-0" /><span className="truncate">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
-          <a href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5">
-            <GraduationCap className="h-5 w-5" />Retour au site
-          </a>
         </nav>
-        <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-white/10">
-          <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 w-full"><LogOut className="h-5 w-5" />Se déconnecter</button>
+
+        {/* Pied de menu toujours visible */}
+        <div className="shrink-0 p-3 border-t border-white/10 space-y-0.5">
+          <a href="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5">
+            <GraduationCap className="h-[18px] w-[18px] shrink-0" />Retour au site
+          </a>
+          <button onClick={() => signOut({ callbackUrl: "/" })} className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 w-full">
+            <LogOut className="h-[18px] w-[18px] shrink-0" />Se déconnecter
+          </button>
         </div>
       </div>
     </>
@@ -82,4 +115,4 @@ export function AdminHeader({ activeTab, onOpenChange }: { activeTab: AdminTab; 
   )
 }
 
-export { tabs, tabTitles }
+export { tabs, tabGroups, tabTitles }

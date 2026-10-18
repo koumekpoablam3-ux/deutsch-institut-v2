@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { useI18n } from "@/i18n/I18nProvider"
 import { useState, useRef, useEffect } from "react"
 import { MessageCircle, X, Send, Loader2, GraduationCap } from "lucide-react"
@@ -9,7 +10,7 @@ interface Msg {
   content: string
 }
 
-export default function ChatbotWidget() {
+function ChatbotWidgetInner() {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Msg[]>([
@@ -103,4 +104,11 @@ export default function ChatbotWidget() {
       </button>
     </div>
   )
+}
+
+// Les boutons flottants (WhatsApp, assistant) ne s'affichent pas dans le panneau d'administration
+export default function ChatbotWidget() {
+  const pathname = usePathname()
+  if (pathname?.startsWith("/admin")) return null
+  return <ChatbotWidgetInner />
 }
