@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { AdminSidebar, AdminHeader, type AdminTab } from "./AdminTabs"
 import CoursesTab from "./tabs/CoursesTab"
+import ApplicationsTab from "./tabs/ApplicationsTab"
 import UsersTab from "./tabs/UsersTab"
 import MessagesTab from "./tabs/MessagesTab"
 import ArticlesTab from "./tabs/ArticlesTab"
@@ -18,6 +19,7 @@ import ContactTab from "./tabs/ContactTab"
 import TranslationsTab from "./tabs/TranslationsTab"
 
 const tabComponents: Record<AdminTab, React.ComponentType> = {
+  dossiers: ApplicationsTab,
   cours: CoursesTab,
   messages: MessagesTab,
   utilisateurs: UsersTab,
@@ -32,7 +34,7 @@ const tabComponents: Record<AdminTab, React.ComponentType> = {
   medias: MediaTab,
 }
 
-const validTabs: AdminTab[] = ["cours", "messages", "utilisateurs", "paiements", "avis", "sessions", "blog", "carrousel", "contenu", "contact", "traductions", "medias"]
+const validTabs: AdminTab[] = ["dossiers", "cours", "messages", "utilisateurs", "paiements", "avis", "sessions", "blog", "carrousel", "contenu", "contact", "traductions", "medias"]
 
 function AdminContent() {
   const searchParams = useSearchParams()

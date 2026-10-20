@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button"
 export default function CourseEnrollButton({ courseId, slug, price }: { courseId: string; slug: string; price: string }) {
   const { t } = useI18n()
   const router = useRouter()
-  const [status, setStatus] = useState<"loading" | "enrolled" | "not_logged_in" | "available">("loading")
+  const [status, setStatus] = useState<"loading" | "enrolled" | "not_logged_in" | "available" | "dossier">("loading")
+  const [dossierStatus, setDossierStatus] = useState("none")
 
   useEffect(() => {
     checkStatus()
@@ -25,7 +26,15 @@ export default function CourseEnrollButton({ courseId, slug, price }: { courseId
       if (enrollRes.ok) {
         const data = await enrollRes.json()
         const isEnrolled = (data.data?.enrollments || []).some((e: { courseId: string }) => e.courseId === courseId)
-        setStatus(isEnrolled ? "enrolled" : "available")
+        if (isEnrolled) { setStatus("enrolled"); return }
+
+        // Le dossier d'inscription doit être accepté avant de pouvoir s'inscrire
+        const dossierRes = await fetch("/api/application/status")
+        if (dossierRes.ok) {
+          const dossier = await dossierRes.json()
+          if (dossier.needsDossier) { setDossierStatus(dossier.status); setStatus("dossier"); return }
+        }
+        setStatus("available")
       } else { setStatus("available") }
     } catch { setStatus("available") }
   }
@@ -41,6 +50,17 @@ export default function CourseEnrollButton({ courseId, slug, price }: { courseId
         <Button onClick={() => router.push(`/cours/${slug}/apprendre`)} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-base">
           {t("Accéder au cours →")}
         </Button>
+      ) : status === "dossier" ? (
+        <div className="space-y-3">
+          <p className="text-sm text-[#1B3A5C]/70 dark:text-white/60">
+            {dossierStatus === "submitted"
+              ? t("Votre dossier est en cours de vérification. Vous pourrez vous inscrire dès qu'il sera accepté.")
+              : t("Pour vous inscrire, votre dossier d'inscription doit d'abord être complété et validé par notre équipe.")}
+          </p>
+          <Button onClick={() => router.push("/dossier")} className="w-full bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold h-12 text-base">
+            {dossierStatus === "submitted" ? t("Suivre mon dossier") : t("Compléter mon dossier")}
+          </Button>
+        </div>
       ) : status === "not_logged_in" ? (
         <Button onClick={() => router.push("/login")} className="w-full bg-[#D4A843] hover:bg-[#C49A3A] text-white font-bold h-12 text-base">
           {t("Connectez-vous pour vous inscrire")}

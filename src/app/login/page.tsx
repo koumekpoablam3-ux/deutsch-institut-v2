@@ -25,6 +25,15 @@ const LEVELS = [
   { label: "Interm. Supérieur (B2)", value: "B2" },
 ]
 
+// Où envoyer l'utilisateur juste après la connexion : son dossier s'il doit encore le compléter, sinon le tableau de bord
+async function nextPageAfterLogin(): Promise<string> {
+  try {
+    const res = await fetch("/api/application/status")
+    if (res.ok && (await res.json()).needsDossier) return "/dossier"
+  } catch { /* on retombe sur le tableau de bord */ }
+  return "/dashboard"
+}
+
 export default function LoginPage() {
   const { t } = useI18n()
   const [tab, setTab] = useState<"login" | "register">("login")
@@ -64,8 +73,8 @@ export default function LoginPage() {
         return
       }
 
-      // Connexion réussie : on redirige manuellement
-      window.location.href = "/dashboard"
+      // Connexion réussie : un étudiant sans dossier validé est dirigé vers son dossier d'inscription
+      window.location.href = await nextPageAfterLogin()
     } catch {
       setLoginError(t("Une erreur est survenue. Veuillez réessayer."))
       setLoginLoading(false)
@@ -98,6 +107,13 @@ export default function LoginPage() {
       const data = await res.json()
 
       if (res.ok && data.success) {
+        // Connexion automatique, puis ouverture du dossier d'inscription
+        const login = await signIn("credentials", { email: regEmail, password: regPassword, redirect: false }) as { error?: string } | undefined
+        if (!login?.error) {
+          toast.success(t("Compte créé avec succès"))
+          window.location.href = await nextPageAfterLogin()
+          return
+        }
         toast.success(t("Compte créé avec succès ! Vous pouvez maintenant vous connecter."))
         setTab("login")
         setLoginEmail(regEmail)

@@ -10,11 +10,11 @@ export async function GET() {
   if (error) return error;
 
   try {
-    const [hero, stats, cta, features, testimonials, contact] = await Promise.all([
+    const [hero, stats, cta, features, testimonials, contact, admission] = await Promise.all([
       getSetting("hero"), getSetting("stats"), getSetting("cta"),
-      getSetting("features"), getSetting("testimonials"), getSetting("contact"),
+      getSetting("features"), getSetting("testimonials"), getSetting("contact"), getSetting("admission"),
     ]);
-    return NextResponse.json({ hero, stats, cta, features, testimonials, contact });
+    return NextResponse.json({ hero, stats, cta, features, testimonials, contact, admission });
   } catch (err) {
     console.error("Admin settings GET error:", err);
     return NextResponse.json({ error: "Une erreur est survenue" }, { status: 500 });

@@ -2,6 +2,7 @@
 // l'accueil. Ce fichier est "pur" (aucun import Prisma) : il peut donc être
 // utilisé aussi bien côté client que côté serveur.
 import { z } from "zod"
+import { admissionSettingsSchema, DEFAULT_ADMISSION, type AdmissionSettings } from "@/lib/admission"
 
 // ───────────── Types ─────────────
 export interface HeroSlideData {
@@ -89,7 +90,7 @@ export interface HomeContent {
   testimonials: TestimonialsSettings
 }
 
-export type SettingKey = "hero" | "stats" | "cta" | "features" | "testimonials" | "contact"
+export type SettingKey = "hero" | "stats" | "cta" | "features" | "testimonials" | "contact" | "admission"
 
 // ───────────── Valeurs par défaut ─────────────
 export const DEFAULT_BUTTONS = {
@@ -317,6 +318,7 @@ export const settingSchemas = {
   features: featuresSettingsSchema,
   testimonials: testimonialsSettingsSchema,
   contact: contactSettingsSchema,
+  admission: admissionSettingsSchema,
 } as const
 
 export const settingDefaults = {
@@ -326,9 +328,11 @@ export const settingDefaults = {
   features: DEFAULT_FEATURES,
   testimonials: DEFAULT_TESTIMONIALS,
   contact: DEFAULT_CONTACT,
+  admission: DEFAULT_ADMISSION,
 } as const
 
-export const SETTING_KEYS = ["hero", "stats", "cta", "features", "testimonials", "contact"] as const
+export const SETTING_KEYS = ["hero", "stats", "cta", "features", "testimonials", "contact", "admission"] as const
+export type { AdmissionSettings }
 
 /** Convertit "" en null pour les champs optionnels avant écriture en base. */
 export function emptyToNull<T extends Record<string, unknown>>(data: T, keys: (keyof T)[]): T {

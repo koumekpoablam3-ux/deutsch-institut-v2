@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { useSession, signOut } from "next-auth/react"
-import { LayoutDashboard, BookOpen, Library, RefreshCw, LogOut, Menu, Lock, CheckCircle, Clock, Star, Zap, BarChart3, GraduationCap, Loader2, User, Target } from "lucide-react"
+import { LayoutDashboard, BookOpen, Library, RefreshCw, LogOut, Menu, Lock, CheckCircle, Clock, Star, Zap, BarChart3, GraduationCap, Loader2, User, Target, ClipboardCheck, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface SessionUser {
@@ -60,6 +60,12 @@ export default function DashboardPage() {
       }
     } catch { /* noop */ }
     finally { setLoading(false) }
+  }, [])
+
+  // État du dossier d'inscription (bandeau d'invitation à le compléter)
+  const [dossier, setDossier] = useState<{ needsDossier: boolean; status: string } | null>(null)
+  useEffect(() => {
+    fetch("/api/application/status").then((r) => (r.ok ? r.json() : null)).then((d) => { if (d) setDossier(d) }).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -148,7 +154,7 @@ export default function DashboardPage() {
           <div><p className="font-bold text-sm">{t("Deutsch-Institut")}</p><p className="text-[10px] text-white/50">{userLevel}</p></div>
         </div>
         <nav className="flex-1 min-h-0 overflow-y-auto p-3 space-y-1">
-          {[{ icon: LayoutDashboard, label: "Tableau de bord", href: "/dashboard", active: true }, { icon: BookOpen, label: "Mes cours", href: "/cours" }, { icon: Library, label: "Catalogue", href: "/cours" }, { icon: RefreshCw, label: "Révision IA", href: "/entrainement-ia" }, { icon: User, label: "Mon profil", href: "/dashboard/profil" }].map((item) => (
+          {[{ icon: LayoutDashboard, label: "Tableau de bord", href: "/dashboard", active: true }, { icon: BookOpen, label: "Mes cours", href: "/cours" }, { icon: Library, label: "Catalogue", href: "/cours" }, { icon: ClipboardCheck, label: "Mon dossier", href: "/dossier" }, { icon: RefreshCw, label: "Révision IA", href: "/entrainement-ia" }, { icon: User, label: "Mon profil", href: "/dashboard/profil" }].map((item) => (
             <a key={item.label} href={item.href} className={"flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm " + (item.active ? "bg-[#D4A843]/20 text-[#D4A843] font-semibold" : "text-white/60 hover:text-white hover:bg-white/5")}>
               <item.icon className="h-5 w-5" />{t(item.label)}
             </a>
@@ -165,6 +171,26 @@ export default function DashboardPage() {
             <button onClick={() => setOpen(true)} className="lg:hidden"><Menu className="h-6 w-6 text-[#1B3A5C] dark:text-white" /></button>
             <h1 className="text-xl font-bold text-[#1B3A5C] dark:text-white">{t("Tableau de bord")}</h1>
           </div>
+          {dossier?.needsDossier && (
+            <a href="/dossier" className={"mb-6 flex items-center justify-between gap-4 rounded-2xl border p-4 " + (dossier.status === "needs_changes" || dossier.status === "rejected" ? "border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800" : "border-amber-300 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700")}>
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 mt-0.5 text-amber-600 shrink-0" />
+                <div>
+                  <p className="font-semibold text-sm text-[#1B3A5C] dark:text-white">
+                    {dossier.status === "submitted" ? t("Dossier en cours de vérification")
+                      : dossier.status === "needs_changes" ? t("Corrections demandées sur votre dossier")
+                      : dossier.status === "rejected" ? t("Dossier refusé")
+                      : t("Complétez votre dossier d'inscription")}
+                  </p>
+                  <p className="text-xs text-[#1B3A5C]/60 dark:text-white/50 mt-0.5">
+                    {dossier.status === "submitted" ? t("Notre équipe vérifie vos informations et vos documents. Vous serez notifié dès qu'une décision sera prise.")
+                      : t("Votre dossier doit être validé avant de pouvoir vous inscrire à un cours.")}
+                  </p>
+                </div>
+              </div>
+              <span className="text-sm font-semibold text-[#D4A843] whitespace-nowrap">{t("Mon dossier")} →</span>
+            </a>
+          )}
           <div className="bg-gradient-to-r from-[#1B3A5C] to-[#0f2a45] rounded-2xl p-6 text-white mb-8 flex items-center justify-between flex-wrap gap-4">
             <div><h2 className="text-2xl font-bold mb-1">{t("Bienvenue,")}{" "}{user?.name?.split(" ")[0] || t("Étudiant")} !</h2><p className="text-white/70">{t("Continuez votre apprentissage. Niveau actuel :")}{" "}{userLevel}</p></div>
             <div className="bg-[#D4A843] text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" />{streakDays} {streakDays > 1 ? t("JOURS DE SÉRIE") : t("JOUR DE SÉRIE")}</div>

@@ -1,9 +1,9 @@
 "use client"
 
 import { signOut } from "next-auth/react"
-import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, CreditCard, Star, Video, Newspaper, GalleryHorizontal, PenLine, ImageIcon, Phone, Languages } from "lucide-react"
+import { GraduationCap, LogOut, Menu, BookOpen, Mail, Users as UsersIcon, CreditCard, Star, Video, Newspaper, GalleryHorizontal, PenLine, ImageIcon, Phone, Languages, ClipboardCheck } from "lucide-react"
 
-export type AdminTab = "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "contact" | "traductions" | "medias"
+export type AdminTab = "dossiers" | "cours" | "messages" | "utilisateurs" | "paiements" | "avis" | "sessions" | "blog" | "carrousel" | "contenu" | "contact" | "traductions" | "medias"
 
 type TabItem = { key: AdminTab; icon: typeof BookOpen; label: string }
 
@@ -12,6 +12,7 @@ const tabGroups: { title: string; items: TabItem[] }[] = [
   {
     title: "Gestion",
     items: [
+      { key: "dossiers", icon: ClipboardCheck, label: "Dossiers d'inscription" },
       { key: "cours", icon: BookOpen, label: "Cours" },
       { key: "utilisateurs", icon: UsersIcon, label: "Utilisateurs" },
       { key: "paiements", icon: CreditCard, label: "Paiements" },
@@ -41,6 +42,7 @@ const tabGroups: { title: string; items: TabItem[] }[] = [
 const tabs: TabItem[] = tabGroups.flatMap((g) => g.items)
 
 const tabTitles: Record<AdminTab, string> = {
+  dossiers: "Dossiers d'inscription",
   cours: "Gestion des cours",
   messages: "Messages de contact",
   utilisateurs: "Utilisateurs",

@@ -9,6 +9,7 @@ import { motion } from "framer-motion"
 import {
   LayoutDashboard, BookOpen, Library, RefreshCw, LogOut, Menu,
   GraduationCap, Loader2, User, Lock, Eye, EyeOff,
+  ClipboardCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -125,6 +126,7 @@ export default function ProfilePage() {
             { icon: LayoutDashboard, label: "Tableau de bord", href: "/dashboard" },
             { icon: BookOpen, label: "Mes cours", href: "/cours" },
             { icon: Library, label: "Catalogue", href: "/cours" },
+            { icon: ClipboardCheck, label: "Mon dossier", href: "/dossier" },
             { icon: RefreshCw, label: "Révision IA", href: "/entrainement-ia" },
             { icon: User, label: "Mon profil", href: "/dashboard/profil", active: true },
           ].map((item) => (

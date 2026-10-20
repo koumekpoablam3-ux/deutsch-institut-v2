@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { assertCanEnroll } from "@/lib/admission-server";
 
 // POST: Enroll user in a course
 export async function POST(request: NextRequest) {
@@ -15,6 +16,8 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = (session.user as { userId: string }).userId;
+    const blocked = await assertCanEnroll(userId, (session.user as { role?: string }).role || "student");
+    if (blocked) return blocked;
     const { courseId } = await request.json();
 
     if (!courseId) {

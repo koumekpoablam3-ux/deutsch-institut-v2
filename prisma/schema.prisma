@@ -32,6 +32,7 @@ model User {
   moduleProgress ModuleProgress[]
   quizAttempts  QuizAttempt[]
   certificates  Certificate[]
+  application   Application?
 }
 
 model PasswordResetToken {
@@ -352,4 +353,51 @@ model Translation {
 
   @@unique([locale, sourceHash])
   @@index([locale])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Dossier d'inscription : l'étudiant renseigne ses informations et dépose
+// ses documents, l'admin vérifie tout avant d'accepter la candidature.
+// ─────────────────────────────────────────────────────────────
+
+model Application {
+  id           String    @id @default(cuid())
+  userId       String    @unique
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Statut. Valeurs valides : draft, submitted, needs_changes, accepted, rejected
+  status       String    @default("draft")
+  /// Dernière étape atteinte par l'étudiant (2 à 5)
+  currentStep  Int       @default(2)
+  /// Informations saisies (identité, projet, niveau, motivation…)
+  data         Json      @default("{}")
+  /// Message de l'admin à l'étudiant (corrections demandées, motif de refus…)
+  adminNote    String?
+  submittedAt  DateTime?
+  reviewedAt   DateTime?
+  reviewedById String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  documents ApplicationDocument[]
+
+  @@index([status])
+}
+
+model ApplicationDocument {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  /// Clé du type de document (définie dans les réglages du dossier : identite, photo, diplome…)
+  type          String
+  filename      String
+  mimeType      String
+  size          Int
+  data          Bytes
+  /// Valeurs valides : pending, approved, rejected
+  status        String      @default("pending")
+  adminComment  String?
+  uploadedAt    DateTime    @default(now())
+
+  @@unique([applicationId, type])
+  @@index([applicationId])
 }

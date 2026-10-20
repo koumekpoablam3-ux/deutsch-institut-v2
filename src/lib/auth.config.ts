@@ -19,6 +19,7 @@ export const authConfig: NextAuthConfig = {
       const isAdminRoute = nextUrl.pathname.startsWith("/admin");
       const isProtected =
         nextUrl.pathname.startsWith("/dashboard") ||
+        nextUrl.pathname.startsWith("/dossier") ||
         nextUrl.pathname.startsWith("/entrainement-ia");
 
       if (isAdminRoute) {

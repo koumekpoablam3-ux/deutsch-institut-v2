@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { createNotification } from "@/lib/notify";
 import { rateLimit } from "@/lib/rate-limit";
+import { assertCanEnroll } from "@/lib/admission-server";
 
 const schema = z.object({
   courseId: z.string().min(1),
@@ -23,6 +24,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Non autorisé" }, { status: 401 });
   }
   const userId = (session.user as { userId: string }).userId;
+
+  // Le dossier d'inscription doit être accepté avant tout paiement
+  const blocked = await assertCanEnroll(userId, (session.user as { role?: string }).role || "student");
+  if (blocked) return blocked;
 
   // Rate limiting: max 5 payment attempts per user per hour
   if (!rateLimit(`payment:${userId}`, MAX_PAYMENT_ATTEMPTS, ONE_HOUR)) {

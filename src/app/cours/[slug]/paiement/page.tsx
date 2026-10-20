@@ -91,6 +91,7 @@ export default function PaiementPage() {
         setTimeout(() => router.push("/dashboard"), 2000)
       } else {
         toast.error(t(data.error || "Erreur lors du paiement"))
+        if (data.code === "APPLICATION_REQUIRED") router.push("/dossier")
       }
     } catch { toast.error(t("Erreur de connexion")) }
     finally { setPaying(false) }
